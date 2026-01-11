@@ -2,6 +2,7 @@
   <Project Path="ProPixelizer.csproj" />
   <Project Path="Opsive.BehaviorDesigner.Runtime.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Opsive.BehaviorDesigner.Samples.csproj" />
   <Project Path="Assembly-CSharp-Editor-firstpass.csproj" />
   <Project Path="Opsive.BehaviorDesigner.Editor.Managers.csproj" />
   <Project Path="Opsive.GraphDesigner.Runtime.Wrappers.csproj" />
