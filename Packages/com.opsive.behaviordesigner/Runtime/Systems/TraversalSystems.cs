@@ -521,37 +521,38 @@ namespace Opsive.BehaviorDesigner.Runtime.Systems
                 if ((!isParentTask && taskComponent.Status != TaskStatus.Running && taskComponent.ParentIndex != ushort.MaxValue) ||
                     (isParentTask && (taskComponent.Status == TaskStatus.Queued || taskComponent.Status == TaskStatus.Running))) {
 
-                    if (evaluationType == EvaluationType.EntireTree) {
-                        // Compute active task bit positions.
-                        var bitIndex = branchComponent.ActiveIndex + 1;
-                        var arrayIndex = bitIndex / ComponentUtility.ulongBitSize;
-                        var bitInUlong = bitIndex % ComponentUtility.ulongBitSize;
-                        while (evaluatedMask.Length <= arrayIndex) evaluatedMask.Add(0UL);
-                        evaluatedMask[arrayIndex] |= (1UL << bitInUlong);
+                    // Compute active task bit positions.
+                    var bitIndex = branchComponent.ActiveIndex + 1;
+                    var arrayIndex = bitIndex / ComponentUtility.ulongBitSize;
+                    var bitInUlong = bitIndex % ComponentUtility.ulongBitSize;
+                    while (evaluatedMask.Length <= arrayIndex) evaluatedMask.Add(0UL);
+                    evaluatedMask[arrayIndex] |= (1UL << bitInUlong);
 
-                        // Prevent evaluating the same task again within the same tick.
-                        if (branchComponent.ActiveIndex == branchComponent.LastActiveIndex) {
-                            continue;
-                        }
-
-                        // Check if the task has already been evaluated this tick.
-                        var alreadyEvaluated = (evaluatedTasks[arrayIndex] & (1UL << bitInUlong)) != 0;
-
-                        // Decision to evaluate:
-                        // - For parent tasks: always eveluate. The parent task should never be the last executing task.
-                        // - For non-parent tasks: evaluate if this task hasn't been evaluated yet.
-                        if (isParentTask || !alreadyEvaluated) {
-                            evaluate = true;
-                            branchComponent.LastActiveIndex = branchComponent.ActiveIndex;
-                        } else {
-                            branchComponent.CanExecute = false;
-                        }
+                    // Prevent evaluating the same task again within the same tick.
+                    if (branchComponent.ActiveIndex == branchComponent.LastActiveIndex) {
+                        branchComponent.CanExecute = false;
                         branchComponents.ElementAt(i) = branchComponent;
-
-                        evaluatedTasks[arrayIndex] |= evaluatedMask[arrayIndex];
-                    } else {
-                        evaluate = true;
+                        continue;
                     }
+
+                    // Check if the task has already been evaluated this tick.
+                    var alreadyEvaluated = (evaluatedTasks[arrayIndex] & (1UL << bitInUlong)) != 0;
+
+                    // Decision to evaluate:
+                    // - For parent tasks: always evaluate. The parent task should never be the last executing task.
+                    // - For non-parent tasks: evaluate if this task hasn't been evaluated yet.
+                    if (isParentTask || !alreadyEvaluated) {
+                        evaluate = true;
+                        branchComponent.LastActiveIndex = branchComponent.ActiveIndex;
+                    } else {
+                        branchComponent.CanExecute = false;
+                    }
+                    branchComponents.ElementAt(i) = branchComponent;
+
+                    evaluatedTasks[arrayIndex] |= evaluatedMask[arrayIndex];
+                } else {
+                    branchComponent.CanExecute = false;
+                    branchComponents.ElementAt(i) = branchComponent;
                 }
             }
 
@@ -561,11 +562,16 @@ namespace Opsive.BehaviorDesigner.Runtime.Systems
 
                 if (evaluate) {
                     if (evaluationType == EvaluationType.Count) {
-                        // Use EvaluatedTasks[0] as the counter.
-                        evaluatedTasks[0]++;
-                        if (evaluatedTasks[0] >= maxEvaluationCount) {
-                            evaluatedTasks[0] = 0;
+                        // Use the last element of EvaluatedTasks as the counter.
+                        evaluatedTasks[evaluatedTasks.Length - 1]++;
+                        if (evaluatedTasks[evaluatedTasks.Length - 1] >= maxEvaluationCount) {
+                            // Reset the counter and bitmask elements.
+                            for (int i = 0; i < evaluatedTasks.Length; ++i) {
+                                evaluatedTasks[i] = 0;
+                            }
                             entityCommandBuffer.SetComponentEnabled<EvaluateFlag>(entityIndex, entity, false);
+                            // Set the bitmask for current active tasks to prevent one extra task from being executed on subsequent frames.
+                            SetActiveBranchBits(ref branchComponents, ref evaluatedTasks);
                         } else {
                             results[2] = true; // Evaluate result.
                         }
@@ -574,26 +580,36 @@ namespace Opsive.BehaviorDesigner.Runtime.Systems
                     }
                 } else {
                     entityCommandBuffer.SetComponentEnabled<EvaluateFlag>(entityIndex, entity, false);
-                    if (evaluationType == EvaluationType.EntireTree) {
-                        for (int i = 0; i < evaluatedTasks.Length; ++i) {
-                            evaluatedTasks[i] = 0;
-                        }
-                        // The system is going to stop evaluating this entity. It will be resumed immediately the next update. Because the DetermineEvaluationJob is run after the tasks
-                        // update the EvaluatedTasks value should be set to the next active task. If this value is set to 0 then one extra task will always be executed with subsequent frames.
-                        for (int i = 0; i < branchComponents.Length; ++i) {
-                            var branchComponent = branchComponents[i];
-                            if (branchComponent.ActiveIndex == ushort.MaxValue) {
-                                continue;
-                            }
-
-                            // Compute active task bit positions.
-                            var bitIndex = branchComponent.ActiveIndex + 1;
-                            var arrayIndex = bitIndex / ComponentUtility.ulongBitSize;
-                            var bitInUlong = bitIndex % ComponentUtility.ulongBitSize;
-                            evaluatedTasks[arrayIndex] |= (1UL << bitInUlong);
-                        }
+                    // Reset the evaluated tasks bitmask.
+                    for (int i = 0; i < evaluatedTasks.Length; ++i) {
+                        evaluatedTasks[i] = 0;
                     }
+                    // The system is going to stop evaluating this entity. It will be resumed immediately the next update. Because the DetermineEvaluationJob is run after the tasks
+                    // update the EvaluatedTasks value should be set to the next active task. If this value is set to 0 then one extra task will always be executed with subsequent frames.
+                    SetActiveBranchBits(ref branchComponents, ref evaluatedTasks);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Sets the bitmask bits for all active branches. This prevents one extra task from being executed on subsequent frames.
+        /// </summary>
+        /// <param name="branchComponents">An array of branch components.</param>
+        /// <param name="evaluatedTasks">The evaluated tasks list to update.</param>
+        [BurstCompile]
+        private static void SetActiveBranchBits<TFixedList>(ref DynamicBuffer<BranchComponent> branchComponents, ref TFixedList evaluatedTasks) where TFixedList : struct, INativeList<ulong>
+        {
+            for (int i = 0; i < branchComponents.Length; ++i) {
+                var branchComponent = branchComponents[i];
+                if (branchComponent.ActiveIndex == ushort.MaxValue) {
+                    continue;
+                }
+
+                // Compute active task bit positions.
+                var bitIndex = branchComponent.ActiveIndex + 1;
+                var arrayIndex = bitIndex / ComponentUtility.ulongBitSize;
+                var bitInUlong = bitIndex % ComponentUtility.ulongBitSize;
+                evaluatedTasks[arrayIndex] |= (1UL << bitInUlong);
             }
         }
     }

@@ -563,6 +563,7 @@ namespace Opsive.BehaviorDesigner.Runtime
             behaviorTreeSystemGroup.AddSystemToUpdateList(world.GetOrCreateSystem<EvaluationCleanupSystem>());
             behaviorTreeSystemGroup.AddSystemToUpdateList(world.GetOrCreateSystem<InterruptedCleanupSystem>());
 
+            var canReevaluate = false;
             var taskComponents = world.EntityManager.GetBuffer<TaskComponent>(entity);
             var taskOffset = (ushort)(eventTask.ConnectedIndex - taskComponents.Length);
             for (int i = eventTask.ConnectedIndex; i < m_Data.LogicNodes.Length; ++i) {
@@ -639,24 +640,24 @@ namespace Opsive.BehaviorDesigner.Runtime
 
                 // Conditional tasks can be reevaluated.
                 if (m_Data.LogicNodes[i] is IConditional && m_Data.LogicNodes[i].ParentIndex != ushort.MaxValue) {
-                    var ReevaluateFlag = new ComponentType();
+                    var reevaluateFlag = new ComponentType();
                     Type reevaluateSystem;
                     if (m_Data.LogicNodes[i] is IAuthoringTask conditionalAuthoringTask) {
                         if (m_Data.LogicNodes[i] is IReevaluateResponder reevaluateTask) {
-                            ReevaluateFlag = reevaluateTask.ReevaluateFlag;
+                            reevaluateFlag = reevaluateTask.ReevaluateFlag;
                             reevaluateSystem = reevaluateTask.ReevaluateSystemType;
                         } else {
                             Debug.LogWarning($"Warning: The task {m_Data.LogicNodes[i]} doesn't have a separate reevaluation tag. This may lead to unexpected results. It is recommend " +
                                 $"that the task implements the IReevaluate interface.");
-                            ReevaluateFlag = conditionalAuthoringTask.Flag;
+                            reevaluateFlag = conditionalAuthoringTask.Flag;
                             reevaluateSystem = conditionalAuthoringTask.SystemType;
                         }
                     } else {
-                        ReevaluateFlag = typeof(TaskObjectReevaluateFlag);
+                        reevaluateFlag = typeof(TaskObjectReevaluateFlag);
                         reevaluateSystem = typeof(TaskObjectReevaluateSystem);
                     }
-                    world.EntityManager.AddComponent(entity, ReevaluateFlag);
-                    world.EntityManager.SetComponentEnabled(entity, ReevaluateFlag, false);
+                    world.EntityManager.AddComponent(entity, reevaluateFlag);
+                    world.EntityManager.SetComponentEnabled(entity, reevaluateFlag, false);
                     ComponentUtility.AddInterruptComponents(world.EntityManager, entity);
                     reevaluateTaskSystemGroup.AddSystemToUpdateList(world.GetOrCreateSystem(reevaluateSystem));
 
@@ -672,6 +673,7 @@ namespace Opsive.BehaviorDesigner.Runtime
 
                     var abortParent = parentComposite as IConditionalAbortParent;
                     if (abortParent != null && abortParent.AbortType != ConditionalAbortType.None) {
+                        canReevaluate = true;
                         var lowerPriorityLowerIndex = ushort.MaxValue;
                         var lowerPriorityUpperIndex = ushort.MaxValue;
                         // Lower Priority aborts are recursive allowing a nested conditional task to be reevaluated even if the direct
@@ -708,7 +710,7 @@ namespace Opsive.BehaviorDesigner.Runtime
                         {
                             Index = node.RuntimeIndex,
                             AbortType = abortParent.AbortType,
-                            ReevaluateFlagComponentType = ReevaluateFlag,
+                            ReevaluateFlagComponentType = reevaluateFlag,
                             LowerPriorityLowerIndex = lowerPriorityLowerIndex,
                             LowerPriorityUpperIndex = lowerPriorityUpperIndex,
                             SelfPriorityUpperIndex = selfPriorityUpperIndex,
@@ -722,6 +724,10 @@ namespace Opsive.BehaviorDesigner.Runtime
                 if (m_Data.LogicNodes[i] is IInterruptResponder interruptResponder) {
                     interruptTaskSystemGroup.AddSystemToUpdateList(world.GetOrCreateSystem(interruptResponder.InterruptSystemType));
                 }
+            }
+
+            if (canReevaluate) {
+                reevaluateTaskSystemGroup.AddSystemToUpdateList(world.GetOrCreateSystem(typeof(ReevaluateSystem)));
             }
 
             // The event task may perform its own logic.

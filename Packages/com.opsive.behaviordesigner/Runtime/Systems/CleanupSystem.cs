@@ -93,15 +93,15 @@ namespace Opsive.BehaviorDesigner.Runtime.Systems
                     // If the chunk is enabled then it should be evaluated.
                     if (chunk.IsComponentEnabled<EnabledFlag>(ref EnabledComponentHandle, i)) {
                         chunk.SetComponentEnabled<EvaluateFlag>(ref EvaluateComponentHandle, i, true);
+                    }
 
-                        // Reset CanExecute for all branches so they can execute in the next tick.
-                        var branchComponents = branchAccessor[i];
-                        for (int j = 0; j < branchComponents.Length; j++) {
-                            var branchComponent = branchComponents[j];
-                            branchComponent.CanExecute = true;
-                            branchComponent.LastActiveIndex = ushort.MaxValue;
-                            branchComponents[j] = branchComponent;
-                        }
+                    // Reset CanExecute for all branches so they can execute in the next tick.
+                    var branchComponents = branchAccessor[i];
+                    for (int j = 0; j < branchComponents.Length; j++) {
+                        var branchComponent = branchComponents[j];
+                        branchComponent.CanExecute = true;
+                        branchComponent.LastActiveIndex = ushort.MaxValue;
+                        branchComponents[j] = branchComponent;
                     }
                 }
             }

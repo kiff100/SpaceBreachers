@@ -1225,7 +1225,15 @@ namespace Opsive.BehaviorDesigner.Runtime
                     if (j == 0) {
                         node.ParentIndex = subtreeParentIndex;
                         subtreeParentIndex = node.Index; // The subsequent subtree tasks should use the first subtree task as the parent reference.
-                        node.SiblingIndex = subtreeAssignments[i].SiblingIndex != ushort.MaxValue ? (ushort)(subtreeIndex + subtreeAssignments[i].NodeCount) : ushort.MaxValue;
+                        // If there's a next subtree from the same reference task, point to its first node. Otherwise, use the original SiblingIndex.
+                        if (i + 1 < subtreeAssignments.Count && subtreeAssignments[i + 1].ReferenceIndex == subtreeAssignments[i].ReferenceIndex) {
+                            // Point to the first node of the next subtree.
+                            var nextSubtreeIndex = (ushort)(subtreeAssignments[i + 1].NodeIndex + subtreeAssignments[i + 1].IndexOffset);
+                            node.SiblingIndex = nextSubtreeIndex;
+                        } else {
+                            // Use the original SiblingIndex from the reference task.
+                            node.SiblingIndex = subtreeAssignments[i].SiblingIndex != ushort.MaxValue ? (ushort)(subtreeIndex + subtreeAssignments[i].NodeCount) : ushort.MaxValue;
+                        }
                     } else {
                         // Adjust the subsequent subtree tasks by the location of the insertion.
                         node.ParentIndex += subtreeParentIndex;

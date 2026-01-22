@@ -1,6 +1,7 @@
 ﻿<Solution>
   <Project Path="ProPixelizer.csproj" />
   <Project Path="Opsive.BehaviorDesigner.Runtime.csproj" />
+  <Project Path="AssetInventory.Editor.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Opsive.BehaviorDesigner.Samples.csproj" />
   <Project Path="Assembly-CSharp-Editor-firstpass.csproj" />
@@ -10,4 +11,8 @@
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Opsive.Shared.Editor.Import.csproj" />
   <Project Path="Opsive.Shared.Runtime.csproj" />
+  <Project Path="AssetInventory.JD.EditorAudioUtils.Editor.csproj" />
+  <Project Path="CodeStage.Package2Folder.csproj" />
+  <Project Path="AssetInventory.Examples.csproj" />
+  <Project Path="AssetInventory.Examples.Editor.csproj" />
 </Solution>

@@ -13,6 +13,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 298743
   packageName: Behavior Designer Pro - DOTS Powered Behavior Trees
-  packageVersion: 2.1.9
+  packageVersion: 2.1.11p2
   assetPath: Packages/com.opsive.behaviordesigner/Editor/NodeViews/UtilityEvaluatorNodeViewControl.cs
-  uploadId: 837752
+  uploadId: 848276

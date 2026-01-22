@@ -85,7 +85,7 @@ namespace Opsive.BehaviorDesigner.Runtime.Components
         public EvaluationType EvaluationType;
         [Tooltip("The maximum number of tasks that can run if the evaluation type is set to EvaluationType.Count.")]
         public ushort MaxEvaluationCount;
-        [Tooltip("Based on the EvaluationType, a mask of the tasks that have been evaluated or the number of tasks that have executed. For EvaluationType.Count, EvaluatedTasks[0] is used as the counter.")]
+        [Tooltip("A bitmask of the tasks that have been evaluated. For EvaluationType.Count, the last element stores the execution count.")]
         public FixedList32Bytes<ulong> EvaluatedTasks;
     }
 
@@ -98,7 +98,7 @@ namespace Opsive.BehaviorDesigner.Runtime.Components
         public EvaluationType EvaluationType;
         [Tooltip("The maximum number of tasks that can run if the evaluation type is set to EvaluationType.Count.")]
         public ushort MaxEvaluationCount;
-        [Tooltip("Based on the EvaluationType, a mask of the tasks that have been evaluated or the number of tasks that have executed. For EvaluationType.Count, EvaluatedTasks[0] is used as the counter.")]
+        [Tooltip("A bitmask of the tasks that have been evaluated. For EvaluationType.Count, the last element stores the execution count.")]
         public FixedList64Bytes<ulong> EvaluatedTasks;
     }
 
@@ -111,7 +111,7 @@ namespace Opsive.BehaviorDesigner.Runtime.Components
         public EvaluationType EvaluationType;
         [Tooltip("The maximum number of tasks that can run if the evaluation type is set to EvaluationType.Count.")]
         public ushort MaxEvaluationCount;
-        [Tooltip("Based on the EvaluationType, a mask of the tasks that have been evaluated or the number of tasks that have executed. For EvaluationType.Count, EvaluatedTasks[0] is used as the counter.")]
+        [Tooltip("A bitmask of the tasks that have been evaluated. For EvaluationType.Count, the last element stores the execution count.")]
         public FixedList128Bytes<ulong> EvaluatedTasks;
     }
 
@@ -124,7 +124,7 @@ namespace Opsive.BehaviorDesigner.Runtime.Components
         public EvaluationType EvaluationType;
         [Tooltip("The maximum number of tasks that can run if the evaluation type is set to EvaluationType.Count.")]
         public ushort MaxEvaluationCount;
-        [Tooltip("Based on the EvaluationType, a mask of the tasks that have been evaluated or the number of tasks that have executed. For EvaluationType.Count, EvaluatedTasks[0] is used as the counter.")]
+        [Tooltip("A bitmask of the tasks that have been evaluated. For EvaluationType.Count, the last element stores the execution count.")]
         public FixedList512Bytes<ulong> EvaluatedTasks;
     }
 
@@ -137,7 +137,7 @@ namespace Opsive.BehaviorDesigner.Runtime.Components
         public EvaluationType EvaluationType;
         [Tooltip("The maximum number of tasks that can run if the evaluation type is set to EvaluationType.Count.")]
         public ushort MaxEvaluationCount;
-        [Tooltip("Based on the EvaluationType, a mask of the tasks that have been evaluated or the number of tasks that have executed. For EvaluationType.Count, EvaluatedTasks[0] is used as the counter.")]
+        [Tooltip("A bitmask of the tasks that have been evaluated. For EvaluationType.Count, the last element stores the execution count.")]
         public FixedList4096Bytes<ulong> EvaluatedTasks;
     }
 
@@ -179,6 +179,8 @@ namespace Opsive.BehaviorDesigner.Runtime.Components
         public ushort InterruptIndex;
         [Tooltip("Specifies if the branch can execute tasks. Set to false when all tasks in the branch have executed this tick.")]
         public bool CanExecute;
+        //public bool m_CanExecute;
+        //public bool CanExecute { get { return m_CanExecute; } set { m_CanExecute = value; Debug.Log("Can Execute " + value); } }
     }
 
     /// <summary>

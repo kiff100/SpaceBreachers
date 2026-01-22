@@ -24,7 +24,7 @@ namespace Opsive.BehaviorDesigner.Runtime.Tasks.Actions.Conversions
         /// <returns>The execution status of the task.</returns>
         public override TaskStatus OnUpdate()
         {
-            if (float.TryParse(m_Value.Value, out float result)) {
+            if (float.TryParse(m_Value.Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float result)) {
                 m_StoreResult.Value = result;
                 return TaskStatus.Success;
             }
