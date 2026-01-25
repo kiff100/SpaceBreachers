@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6c03892f2b318074783aa40367597378
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 310243
+  packageName: Movement Pack for Behavior Designer Pro
+  packageVersion: 2.0.9
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/MovementPack/Scripts/Opsive.BehaviorDesigner.AddOns.MovementPack.Runtime.asmdef
+  uploadId: 815892

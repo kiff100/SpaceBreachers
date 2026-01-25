@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3933dfd4f14b48e43a67cc83b8d76667
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 23800000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 310244
+  packageName: Senses Pack for Behavior Designer Pro
+  packageVersion: 1.0.3
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/SensesPack/Demo/Demo/NavMesh-Plane.asset
+  uploadId: 782081

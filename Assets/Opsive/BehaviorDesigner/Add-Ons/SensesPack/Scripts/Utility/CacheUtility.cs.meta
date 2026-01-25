@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: fc55ce0cb25645d49b06e3454db71d2f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 310244
+  packageName: Senses Pack for Behavior Designer Pro
+  packageVersion: 1.0.3
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/SensesPack/Scripts/Utility/CacheUtility.cs
+  uploadId: 782081

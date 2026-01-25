@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b08ee449fe728fc4ba55d8ba59f40e23
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 310244
+  packageName: Senses Pack for Behavior Designer Pro
+  packageVersion: 1.0.3
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/SensesPack/Demo/Materials/ColdWall.mat
+  uploadId: 782081

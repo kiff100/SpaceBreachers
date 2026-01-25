@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 4967f5f50b59543429847d83e430b3e1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: -50
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 310244
+  packageName: Senses Pack for Behavior Designer Pro
+  packageVersion: 1.0.3
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/SensesPack/Scripts/Emitters/SceneTemperature.cs
+  uploadId: 782081

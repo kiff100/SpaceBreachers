@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: bf25894eba14baf4bae7b893076c432a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 310244
+  packageName: Senses Pack for Behavior Designer Pro
+  packageVersion: 1.0.3
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/Shared/Runtime/NavMeshAgentPathfinder.cs
+  uploadId: 782081

@@ -25,6 +25,14 @@
       "source": "embedded",
       "dependencies": {}
     },
+    "com.opsive.ultimatecharactercontroller": {
+      "version": "file:com.opsive.ultimatecharactercontroller",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.opsive.shared": "2.0.0"
+      }
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 1,

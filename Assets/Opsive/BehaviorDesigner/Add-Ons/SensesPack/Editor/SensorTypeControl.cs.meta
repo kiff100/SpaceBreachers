@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: f1f8d89113aa84f47b03c48c8dc9fdd3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 310244
+  packageName: Senses Pack for Behavior Designer Pro
+  packageVersion: 1.0.3
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/SensesPack/Editor/SensorTypeControl.cs
+  uploadId: 782081

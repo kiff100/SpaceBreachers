@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b77a1a6a420caf9488c36fd199a646cc
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 310244
+  packageName: Senses Pack for Behavior Designer Pro
+  packageVersion: 1.0.3
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/SensesPack/Demo/Prefabs/ScentParticle.prefab
+  uploadId: 782081

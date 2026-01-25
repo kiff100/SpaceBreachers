@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 861067968434d8a449fe5a840d1b8928
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 322900
+  packageName: Tactical Pack for Behavior Designer Pro
+  packageVersion: 2.0.5
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/TacticalPack/Demo/Prefabs/TacticalAgent.prefab
+  uploadId: 815896

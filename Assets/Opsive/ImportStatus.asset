@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9a6fcaab71877649a4598d315010679, type: 3}
   m_Name: ImportStatus
   m_EditorClassIdentifier: Opsive.Shared.Editor.Import::Opsive.Shared.Editor.Import.ImportStatus
-  m_CharacterProjectSettingsShown: 0
+  m_CharacterProjectSettingsShown: 1
   m_BehaviorWindowShown: 1

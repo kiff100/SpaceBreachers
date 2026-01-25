@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 57516c34ec878394a8d98e15a5a29048
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 310244
+  packageName: Senses Pack for Behavior Designer Pro
+  packageVersion: 1.0.3
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/Shared/Demo/Scripts/Opsive.BehaviorDesigner.AddOns.Shared.Demo.asmdef
+  uploadId: 782081

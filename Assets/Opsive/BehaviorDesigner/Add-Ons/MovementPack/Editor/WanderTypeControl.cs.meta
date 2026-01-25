@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5ce264d063e0b144fb364cd8a31a47dc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 310243
+  packageName: Movement Pack for Behavior Designer Pro
+  packageVersion: 2.0.9
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/MovementPack/Editor/WanderTypeControl.cs
+  uploadId: 815892

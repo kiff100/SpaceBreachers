@@ -103,8 +103,8 @@ TextureImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 298743
-  packageName: Behavior Designer Pro - DOTS Powered Behavior Trees
-  packageVersion: 2.1.11p2
+  productId: 233710
+  packageName: Ultimate Character Controller
+  packageVersion: 3.3.3p1
   assetPath: Packages/com.opsive.shared/Editor/Icons/Units/UnityEngine.Vector2.png
-  uploadId: 848276
+  uploadId: 841272

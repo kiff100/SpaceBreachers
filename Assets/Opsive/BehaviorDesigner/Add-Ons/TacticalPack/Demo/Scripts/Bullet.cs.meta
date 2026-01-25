@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 6ddb4f12be732854faf0dff8f8b5b44e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 322900
+  packageName: Tactical Pack for Behavior Designer Pro
+  packageVersion: 2.0.5
+  assetPath: Assets/Opsive/BehaviorDesigner/Add-Ons/TacticalPack/Demo/Scripts/Bullet.cs
+  uploadId: 815896
