@@ -533,6 +533,7 @@ MonoBehaviour:
   fireDelayInSeconds: 1
   lastFired: 0
   vcam: {fileID: 0}
+  maxProjectiles: 1
 --- !u!4 &1139345372 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4531198511213788, guid: 5a5c1ae74ed6fa34eb03ca7e65badaf7, type: 3}

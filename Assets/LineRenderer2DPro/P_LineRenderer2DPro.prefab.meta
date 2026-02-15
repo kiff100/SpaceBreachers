@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fe0c5c2471ed11749a28c083dcf1cf32
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297007
+  packageName: LineRenderer2D Pro
+  packageVersion: 1.3.0
+  assetPath: Assets/LineRenderer2DPro/P_LineRenderer2DPro.prefab
+  uploadId: 832586

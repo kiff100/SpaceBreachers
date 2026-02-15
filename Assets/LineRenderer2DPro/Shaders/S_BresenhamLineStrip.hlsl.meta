@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 2db39a9660b873d43b7d9363f15a3ed9
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297007
+  packageName: LineRenderer2D Pro
+  packageVersion: 1.3.0
+  assetPath: Assets/LineRenderer2DPro/Shaders/S_BresenhamLineStrip.hlsl
+  uploadId: 832586

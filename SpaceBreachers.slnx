@@ -1,12 +1,16 @@
 ﻿<Solution>
   <Project Path="Opsive.Shared.Editor.csproj" />
+  <Project Path="Micosmo.SensorToolkit.csproj" />
   <Project Path="Opsive.UltimateCharacterController.csproj" />
   <Project Path="ProPixelizer.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="LineRenderer2DPro.csproj" />
   <Project Path="Opsive.BehaviorDesigner.Runtime.csproj" />
   <Project Path="Opsive.UltimateCharacterController.Demo.csproj" />
   <Project Path="Opsive.UltimateCharacterController.Editor.csproj" />
   <Project Path="AssetInventory.Editor.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Micosmo.SensorToolkit.Editor.csproj" />
   <Project Path="Opsive.BehaviorDesigner.AddOns.Shared.Editor.csproj" />
   <Project Path="Opsive.Shared.Runtime.csproj" />
   <Project Path="Opsive.BehaviorDesigner.AddOns.SensesPack.Runtime.csproj" />
@@ -19,7 +23,6 @@
   <Project Path="Opsive.GraphDesigner.Runtime.Wrappers.csproj" />
   <Project Path="Opsive.BehaviorDesigner.AddOns.MovementPack.Editor.csproj" />
   <Project Path="Opsive.BehaviorDesigner.Editor.Controls.NodeViews.csproj" />
-  <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Opsive.Shared.Editor.Import.csproj" />
   <Project Path="Opsive.BehaviorDesigner.AddOns.Shared.Demo.csproj" />
   <Project Path="Opsive.UltimateCharacterController.Demo.Editor.csproj" />

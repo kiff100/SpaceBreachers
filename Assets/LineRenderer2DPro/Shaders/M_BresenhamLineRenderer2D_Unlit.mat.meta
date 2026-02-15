@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a483719461fa1804185e1cf889059644
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297007
+  packageName: LineRenderer2D Pro
+  packageVersion: 1.3.0
+  assetPath: Assets/LineRenderer2DPro/Shaders/M_BresenhamLineRenderer2D_Unlit.mat
+  uploadId: 832586

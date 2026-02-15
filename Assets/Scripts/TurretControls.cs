@@ -1,4 +1,7 @@
+using Opsive.Shared.Utility;
 using Opsive.UltimateCharacterController.Game;
+using System;
+using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,12 +17,13 @@ public class TurretControls : MonoBehaviour
     public int fireDelayInSeconds = 5;
     public float lastFired = 0f;
     public CinemachineCamera vcam;
-
+    public int maxProjectiles = 1;
 
     private Camera mainCamera;
     private Collider2D turretCollider;
     private float fireHoldStartTime;
     private bool wasFirePressed;
+    private List<MagnetProjectile> projectiles;
 
     void Start()
     {
@@ -30,6 +34,7 @@ public class TurretControls : MonoBehaviour
         // Use the Cinemachine camera's output camera
         CinemachineBrain cinemachineBrain = CinemachineBrain.GetActiveBrain(0);
         vcam = (CinemachineCamera)cinemachineBrain.ActiveVirtualCamera;
+        projectiles = new List<MagnetProjectile>();
     }
 
     void Update()
@@ -65,24 +70,34 @@ public class TurretControls : MonoBehaviour
         }
         else if (wasFirePressed)
         {
-            if (Time.time - lastFired >= fireDelayInSeconds)
+            if (Time.time - lastFired >= fireDelayInSeconds && projectiles.Count < maxProjectiles)
             {
                 float holdDuration = Time.time - fireHoldStartTime;
-                Vector2 direction = GetFireDirection();
+                Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
+                mouseScreenPos.z = -Camera.main.transform.position.z;
+                Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+                Vector2 direction = GetProjectileDirection(mouseWorldPos, this.firePoint.position);
                 FireProjectile(holdDuration, direction);
                 lastFired = Time.time;
                 Debug.Log($"Fire! Hold duration: {holdDuration:F2} seconds, Direction: {direction}");
             }
-            wasFirePressed = false;
+            else if (projectiles.Count >= maxProjectiles)
+            {
+                foreach (MagnetProjectile projectile in projectiles)
+                {
+                    if (projectile != null)
+                    {
+                        projectile.ReturnToTurret();
+                    }
+                }
+            }
+                wasFirePressed = false;
         }
     }
 
-    Vector2 GetFireDirection()
+    Vector2 GetProjectileDirection(Vector3 destination, Vector3 origin)
     {
-        Vector3 mouseScreenPos = Mouse.current.position.ReadValue();            
-        mouseScreenPos.z = -Camera.main.transform.position.z;
-        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
-        Vector2 direction = (mouseWorldPos - firePoint.position).normalized;
+        Vector2 direction = (destination - origin).normalized;
         return direction;
     }
 
@@ -114,11 +129,18 @@ public class TurretControls : MonoBehaviour
         }
 
         GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-        
         MagnetProjectile magnetProjectile = projectile.GetComponent<MagnetProjectile>();
+        projectiles.Add(magnetProjectile);
         if (magnetProjectile != null)
         {
+            magnetProjectile.shotIndex = projectiles.Count - 1;
+            magnetProjectile.turret = this;
             magnetProjectile.Fire(holdDuration, direction);
         }
+    }
+
+    internal void ShotReturned(MagnetProjectile magnetProjectile)
+    {
+        projectiles.Remove(magnetProjectile);
     }
 }

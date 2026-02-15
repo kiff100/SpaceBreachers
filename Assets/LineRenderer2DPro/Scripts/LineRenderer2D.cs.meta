@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: d8e1bda1c13f4cc48834ba6c84513f52
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297007
+  packageName: LineRenderer2D Pro
+  packageVersion: 1.3.0
+  assetPath: Assets/LineRenderer2DPro/Scripts/LineRenderer2D.cs
+  uploadId: 832586

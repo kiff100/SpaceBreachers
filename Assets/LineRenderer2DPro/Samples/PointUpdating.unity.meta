@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: cc2173bd42535e748aff3aa304cefa96
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297007
+  packageName: LineRenderer2D Pro
+  packageVersion: 1.3.0
+  assetPath: Assets/LineRenderer2DPro/Samples/PointUpdating.unity
+  uploadId: 832586

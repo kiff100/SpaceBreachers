@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ed0d95356b66d664a850cee9ae2fceca
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297007
+  packageName: LineRenderer2D Pro
+  packageVersion: 1.3.0
+  assetPath: Assets/LineRenderer2DPro/Samples/Editor/M_SpriteMaskVisibleOutside.mat
+  uploadId: 832586
