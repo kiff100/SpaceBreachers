@@ -18,12 +18,14 @@ public class TurretControls : MonoBehaviour
     public float lastFired = 0f;
     public CinemachineCamera vcam;
     public int maxProjectiles = 1;
+    public GameObject tetherLinePrefab;
 
     private Camera mainCamera;
     private Collider2D turretCollider;
     private float fireHoldStartTime;
     private bool wasFirePressed;
-    private List<MagnetProjectile> projectiles;
+    private List<MagnetProjectile> projectiles = new List<MagnetProjectile>();
+    private List<TetherLine> tetherLines = new List<TetherLine>();
 
     void Start()
     {
@@ -34,7 +36,6 @@ public class TurretControls : MonoBehaviour
         // Use the Cinemachine camera's output camera
         CinemachineBrain cinemachineBrain = CinemachineBrain.GetActiveBrain(0);
         vcam = (CinemachineCamera)cinemachineBrain.ActiveVirtualCamera;
-        projectiles = new List<MagnetProjectile>();
     }
 
     void Update()
@@ -136,11 +137,27 @@ public class TurretControls : MonoBehaviour
             magnetProjectile.shotIndex = projectiles.Count - 1;
             magnetProjectile.turret = this;
             magnetProjectile.Fire(holdDuration, direction);
+
+            if (magnetProjectile.isTethered)
+            {
+                Debug.Log($"Creating tether line for projectile {magnetProjectile.shotIndex}");
+                GameObject tetherLineObj = Instantiate(tetherLinePrefab);
+                TetherLine tetherLine = tetherLineObj.GetComponent<TetherLine>();
+                tetherLines.Add(tetherLine);
+
+                if (tetherLine != null)
+                {
+                    Debug.Log($"Creating tether line for projectile {magnetProjectile.shotIndex}");
+                    tetherLine.UpdatePosition(this.transform.position, magnetProjectile.transform.position);
+                    magnetProjectile.tetherLine = tetherLine;
+                }
+            }
         }
     }
 
     internal void ShotReturned(MagnetProjectile magnetProjectile)
     {
+        tetherLines.Remove(magnetProjectile.tetherLine);
         projectiles.Remove(magnetProjectile);
     }
 }

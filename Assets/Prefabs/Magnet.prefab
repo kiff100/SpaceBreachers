@@ -105,9 +105,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa415fc39437be94d85e3fc6453746c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MagnetProjectile
-  maxSpeed: 20
+  maxSpeed: 50
   minSpeed: 5
   decelerationRate: 1
+  turret: {fileID: 0}
+  shotIndex: 0
+  isTethered: 1
 --- !u!50 &6468850354178679522
 Rigidbody2D:
   serializedVersion: 5

@@ -9,12 +9,14 @@ public class MagnetProjectile : MonoBehaviour
     public float decelerationRate = 2f; // Speed decrease per second
     public TurretControls turret; // Reference to the turret script that fired the projectile
     public int shotIndex; // Identifier for the shot, useful for tracking
+    public bool isTethered = true;
 
     private Rigidbody2D rb;
     private float holdDuration;
     private Vector2 travelDirection = Vector2.right;
     private float currentSpeed;
     private bool returningToTurret = false;
+    internal TetherLine tetherLine;
 
     void Start()
     {
@@ -49,6 +51,10 @@ public class MagnetProjectile : MonoBehaviour
         else
         {
             currentSpeed -= decelerationRate * Time.deltaTime;
+        }
+        if (tetherLine != null)
+        {
+            this.tetherLine.UpdatePosition(turret.firePoint.position, transform.position); // Update the tether line position every frame
         }
         currentSpeed = Mathf.Max(currentSpeed, 0f); // Clamp to zero
         rb.linearVelocity = travelDirection * currentSpeed;
