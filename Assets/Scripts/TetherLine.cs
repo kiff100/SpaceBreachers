@@ -26,10 +26,8 @@ public class TetherLine : MonoBehaviour
     }
     void Update()
     {
-        Debug.Log($"TetherLine Update: Start {startPoint}, End {endPoint}");
         if (startPoint != null && endPoint != null)
         {
-            Debug.Log($"Updating tether line: Start {startPoint}, End {endPoint}");
             lineRenderer.SetPosition(0, startPoint);
             lineRenderer.SetPosition(1, endPoint);
         }

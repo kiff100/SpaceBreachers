@@ -40,23 +40,7 @@ public class TurretControls : MonoBehaviour
 
     void Update()
     {
-        HandleMovement();
         HandleFire();
-    }
-
-    void HandleMovement()
-    {
-        if (moveAction.IsPressed())
-        {
-            Vector2 moveValue = moveAction.ReadValue<Vector2>();
-            Vector3 newPosition = transform.position + new Vector3(moveValue.x * moveSpeed * Time.deltaTime, 0, 0);
-            
-            if (IsWithinScreenBounds(newPosition))
-            {
-                transform.position = newPosition;
-                Debug.Log($"Move: {moveValue}");
-            }
-        }
     }
 
     void HandleFire()
@@ -129,7 +113,7 @@ public class TurretControls : MonoBehaviour
             return;
         }
 
-        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, projectilePrefab.transform.rotation);
         MagnetProjectile magnetProjectile = projectile.GetComponent<MagnetProjectile>();
         projectiles.Add(magnetProjectile);
         if (magnetProjectile != null)
@@ -140,14 +124,12 @@ public class TurretControls : MonoBehaviour
 
             if (magnetProjectile.isTethered)
             {
-                Debug.Log($"Creating tether line for projectile {magnetProjectile.shotIndex}");
                 GameObject tetherLineObj = Instantiate(tetherLinePrefab);
                 TetherLine tetherLine = tetherLineObj.GetComponent<TetherLine>();
                 tetherLines.Add(tetherLine);
 
                 if (tetherLine != null)
                 {
-                    Debug.Log($"Creating tether line for projectile {magnetProjectile.shotIndex}");
                     tetherLine.UpdatePosition(this.transform.position, magnetProjectile.transform.position);
                     magnetProjectile.tetherLine = tetherLine;
                 }

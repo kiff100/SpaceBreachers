@@ -22,6 +22,8 @@ public class MagnetProjectile : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         
+        //this.gameObject.transform.rotation = 
+
         if (rb == null)
         {
             Debug.LogError("MagnetProjectile requires a Rigidbody2D component!");
