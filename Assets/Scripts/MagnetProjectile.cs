@@ -46,6 +46,12 @@ public class MagnetProjectile : MonoBehaviour
 
                 turret.ShotReturned(this);
 
+                // Destroy the tether line if it exists
+                if (tetherLine != null)
+                {
+                    Destroy(tetherLine.gameObject);
+                }
+
                 // Destroy the projectile
                 Destroy(gameObject);
             }
