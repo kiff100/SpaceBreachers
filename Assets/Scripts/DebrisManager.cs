@@ -9,6 +9,8 @@ public class DebrisManager : MonoBehaviour
     public List<GameObject> debrisPrefabs; // List of debris prefabs to spawn
     public List<PolygonCollider2D> spawnZones; // List of polygon colliders defining spawn zones
     public float minDebrisDistance = 2f; // Minimum distance between debris pieces
+    public float minAngularVelocity = -360f; // Minimum rotation speed (degrees per second)
+    public float maxAngularVelocity = 360f; // Maximum rotation speed (degrees per second)
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -57,7 +59,18 @@ public class DebrisManager : MonoBehaviour
                     if (randomPoint != Vector2.zero)
                     {
                         GameObject debrisPrefab = debrisPrefabs[UnityEngine.Random.Range(0, debrisPrefabs.Count)];
-                        Instantiate(debrisPrefab, randomPoint, Quaternion.identity);
+                        float randomRotation = UnityEngine.Random.Range(0f, 360f);
+                        Quaternion randomQuaternion = Quaternion.Euler(0, 0, randomRotation);
+                        
+                        GameObject spawnedDebris = Instantiate(debrisPrefab, randomPoint, randomQuaternion);
+                        
+                        Rigidbody2D rb = spawnedDebris.GetComponent<Rigidbody2D>();
+                        if (rb != null)
+                        {
+                            float randomAngularVelocity = UnityEngine.Random.Range(minAngularVelocity, maxAngularVelocity);
+                            rb.angularVelocity = randomAngularVelocity;
+                        }
+                        
                         spawnedPositions.Add(randomPoint);
                     }
                 }

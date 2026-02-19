@@ -31,10 +31,22 @@ public class TurretControls : MonoBehaviour
     {
         moveAction = InputSystem.actions.FindAction("Move");
         fireAction = InputSystem.actions.FindAction("Fire");
+        
+        if (fireAction == null)
+        {
+            Debug.LogError("Fire action not found in input system!");
+        }
+        
         turretCollider = GetComponent<Collider2D>();
         lastFired = -fireDelayInSeconds;
-        // Use the Cinemachine camera's output camera
+        
         CinemachineBrain cinemachineBrain = CinemachineBrain.GetActiveBrain(0);
+        if (cinemachineBrain == null)
+        {
+            Debug.LogError("No active Cinemachine brain found!");
+            return;
+        }
+        
         vcam = (CinemachineCamera)cinemachineBrain.ActiveVirtualCamera;
     }
 
@@ -57,6 +69,20 @@ public class TurretControls : MonoBehaviour
         {
             if (Time.time - lastFired >= fireDelayInSeconds && projectiles.Count < maxProjectiles)
             {
+                if (Camera.main == null)
+                {
+                    Debug.LogError("Main camera not found!");
+                    wasFirePressed = false;
+                    return;
+                }
+
+                if (firePoint == null)
+                {
+                    Debug.LogError("Fire point not assigned!");
+                    wasFirePressed = false;
+                    return;
+                }
+
                 float holdDuration = Time.time - fireHoldStartTime;
                 Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
                 mouseScreenPos.z = -Camera.main.transform.position.z;
@@ -76,7 +102,7 @@ public class TurretControls : MonoBehaviour
                     }
                 }
             }
-                wasFirePressed = false;
+            wasFirePressed = false;
         }
     }
 
@@ -84,25 +110,6 @@ public class TurretControls : MonoBehaviour
     {
         Vector2 direction = (destination - origin).normalized;
         return direction;
-    }
-
-    bool IsWithinScreenBounds(Vector3 position)
-    {
-        Vector3 screenPoint = mainCamera.WorldToScreenPoint(position);
-        
-        if (turretCollider != null)
-        {
-            Bounds bounds = turretCollider.bounds;
-            float halfWidth = bounds.extents.x;
-            
-            return screenPoint.x - halfWidth > 0 && 
-                   screenPoint.x + halfWidth < Screen.width &&
-                   screenPoint.y > 0 && 
-                   screenPoint.y < Screen.height;
-        }
-        
-        return screenPoint.x > 0 && screenPoint.x < Screen.width &&
-               screenPoint.y > 0 && screenPoint.y < Screen.height;
     }
 
     void FireProjectile(float holdDuration, Vector2 direction)
