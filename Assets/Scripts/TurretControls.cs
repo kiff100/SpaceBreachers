@@ -16,7 +16,6 @@ public class TurretControls : MonoBehaviour
     public float moveSpeed = 5f;
     public int fireDelayInSeconds = 5;
     public float lastFired = 0f;
-    public CinemachineCamera vcam;
     public int maxProjectiles = 1;
     public GameObject tetherLinePrefab;
 
@@ -46,8 +45,6 @@ public class TurretControls : MonoBehaviour
             Debug.LogError("No active Cinemachine brain found!");
             return;
         }
-        
-        vcam = (CinemachineCamera)cinemachineBrain.ActiveVirtualCamera;
     }
 
     void Update()
@@ -121,7 +118,7 @@ public class TurretControls : MonoBehaviour
         }
 
         GameObject projectile = Instantiate(projectilePrefab, firePoint.position, projectilePrefab.transform.rotation);
-        MagnetProjectile magnetProjectile = projectile.GetComponent<MagnetProjectile>();
+        MagnetProjectile magnetProjectile = projectile.GetComponentInChildren<MagnetProjectile>();
         projectiles.Add(magnetProjectile);
         if (magnetProjectile != null)
         {

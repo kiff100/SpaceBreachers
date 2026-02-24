@@ -43,7 +43,7 @@ public class DebrisManager : MonoBehaviour
 
     private void SpawnDebris()
     {
-        List<Vector2> spawnedPositions = new List<Vector2>();
+        List<Vector3> spawnedPositions = new List<Vector3>();
 
         foreach (PolygonCollider2D spawnZone in spawnZones)
         {
@@ -54,9 +54,9 @@ public class DebrisManager : MonoBehaviour
                 int numberDebrisToSpawn = debrisSpawnZone.numberDebrisToSpawn;
                 for (int i = 0; i < numberDebrisToSpawn; i++)
                 {
-                    Vector2 randomPoint = GetRandomPointInPolygon(spawnZone, spawnedPositions);
+                    Vector3 randomPoint = GetRandomPointInPolygon(spawnZone, spawnedPositions);
                     
-                    if (randomPoint != Vector2.zero)
+                    if (randomPoint != Vector3.zero)
                     {
                         GameObject debrisPrefab = debrisPrefabs[UnityEngine.Random.Range(0, debrisPrefabs.Count)];
                         float randomRotation = UnityEngine.Random.Range(0f, 360f);
@@ -78,18 +78,19 @@ public class DebrisManager : MonoBehaviour
         }
     }
 
-    private Vector2 GetRandomPointInPolygon(PolygonCollider2D spawnZone, List<Vector2> spawnedPositions)
+    private Vector3 GetRandomPointInPolygon(PolygonCollider2D spawnZone, List<Vector3> spawnedPositions)
     {
         Bounds bounds = spawnZone.bounds;
-        Vector2 randomPoint;
+        Vector3 randomPoint;
         int maxAttempts = 30; // Prevent infinite loops
         int attempts = 0;
 
         do
         {
-            randomPoint = new Vector2(
+            randomPoint = new Vector3(
                 UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
-                UnityEngine.Random.Range(bounds.min.y, bounds.max.y)
+                UnityEngine.Random.Range(bounds.min.y, bounds.max.y),
+                spawnZone.transform.position.z
             );
             attempts++;
 
@@ -100,10 +101,10 @@ public class DebrisManager : MonoBehaviour
             }
         } while (attempts < maxAttempts);
 
-        return Vector2.zero; // Return zero if no valid point found
+        return Vector3.zero; // Return zero if no valid point found
     }
 
-    private bool IsPointFarEnough(Vector2 point, List<Vector2> spawnedPositions)
+    private bool IsPointFarEnough(Vector2 point, List<Vector3> spawnedPositions)
     {
         foreach (Vector2 spawnedPos in spawnedPositions)
         {

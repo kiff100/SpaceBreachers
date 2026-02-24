@@ -25,7 +25,7 @@ public class MagnetProjectile : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = this.transform.parent.GetComponent<Rigidbody2D>();
         
         if (rb == null)
         {
@@ -42,7 +42,11 @@ public class MagnetProjectile : MonoBehaviour
         {
             // Set the travel direction as the source can keep moving, so we need to update the direction every frame
             travelDirection = (turret.firePoint.position - transform.position).normalized;
-            rb.linearVelocity = travelDirection * maxSpeed; // Update velocity only when returning
+            
+            // Apply force to move toward turret at maxSpeed
+            Vector2 requiredVelocity = travelDirection * maxSpeed;
+            Vector2 velocityChange = requiredVelocity - rb.linearVelocity;
+            rb.AddForce(velocityChange * rb.mass, ForceMode2D.Force);
             
             if (Vector2.Distance(transform.position, turret.firePoint.position) < 0.5f)
             {
@@ -76,7 +80,7 @@ public class MagnetProjectile : MonoBehaviour
                 attachedObjects.Clear();
 
                 // Destroy the projectile
-                Destroy(gameObject);
+                Destroy(gameObject.transform.parent.gameObject);
             }
         }
 
@@ -142,13 +146,13 @@ public class MagnetProjectile : MonoBehaviour
 
         if (rb == null)
         {
-            rb = GetComponent<Rigidbody2D>();
+            rb = this.transform.parent.GetComponent<Rigidbody2D>();
         }
 
-        // Apply initial velocity only once
-        rb.linearVelocity = travelDirection * currentSpeed;
+        // Apply initial velocity as an impulse (instantaneous force)
+        rb.AddForce(travelDirection * currentSpeed * rb.mass, ForceMode2D.Impulse);
         
-        // Apply deceleration via drag instead of manually updating velocity
+        // Apply deceleration via linear damping
         rb.linearDamping = decelerationRate;
     }
 
