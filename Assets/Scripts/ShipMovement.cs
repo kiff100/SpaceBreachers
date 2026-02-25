@@ -4,17 +4,30 @@ using UnityEngine.InputSystem;
 
 public class ShipMovement : MonoBehaviour
 {
-    
     private NavMeshAgent agent;
-    private float prefabStartingRotationX;
-    private float prefabstartingRotationY;
+    private Rigidbody2D rb;
     public float rotationSpeed = 5f; // Rotation speed multiplier
+    public float velocityDamping = 0.95f; // Physics damping for smooth movement
 
     void Start()
     {
         agent = GetComponentInChildren<NavMeshAgent>();
         agent.updateRotation = false; // Disable automatic rotation
         agent.updateUpAxis = false; // Disable automatic up axis adjustment
+        agent.updatePosition = false; // Disable automatic position update; we'll use physics instead
+
+        rb = GetComponentInParent<Rigidbody2D>();
+        if (rb == null)
+        {
+            Debug.LogError("ShipMovement requires a Rigidbody2D component on the parent or self!");
+            return;
+        }
+
+        // Configure rigidbody for physics-based movement
+        rb.gravityScale = 0f;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb.linearDamping = 0.5f;
+        rb.angularDamping = 0.5f;
     }
 
     void Update()
@@ -23,6 +36,20 @@ public class ShipMovement : MonoBehaviour
         {
             HandleRightClick();
             Debug.Log("Right mouse button clicked, handling movement.");
+        }
+    }
+
+    void FixedUpdate()
+    {
+        // Update agent position to match rigidbody position
+        agent.nextPosition = rb.position;
+
+        // Apply desired velocity as force for physics-based movement
+        if (agent.hasPath && !agent.pathPending)
+        {
+            Vector2 desiredVelocity = agent.desiredVelocity;
+            Vector2 velocityDifference = desiredVelocity - rb.linearVelocity;
+            rb.AddForce(velocityDifference * rb.mass, ForceMode2D.Force);
         }
 
         RotateTowardMovement();
@@ -40,9 +67,9 @@ public class ShipMovement : MonoBehaviour
 
     private void RotateTowardMovement()
     {
-        if (agent.velocity.sqrMagnitude > 0.01f) // Only rotate when moving
+        if (rb.linearVelocity.sqrMagnitude > 0.01f) // Only rotate when moving
         {
-            Vector3 direction = agent.velocity.normalized;
+            Vector2 direction = rb.linearVelocity.normalized;
             float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             float currentAngle = transform.eulerAngles.z;
 

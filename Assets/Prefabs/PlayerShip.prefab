@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1264973938509469999}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 371201634276285329}
   - component: {fileID: 3097247783207975718}
   - component: {fileID: 6359278658025091893}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: PlayerShip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,6 +80,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipMovement
   rotationSpeed: 5
+  velocityDamping: 0.95
 --- !u!195 &371201634276285329
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -202,6 +203,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Ship_Bomber_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1029753612667854, guid: 79035093c9587c246b3bb29ffc5838a4, type: 3}
+      propertyPath: m_Layer
+      value: 31
+      objectReference: {fileID: 0}
     - target: {fileID: 4563042777394416, guid: 79035093c9587c246b3bb29ffc5838a4, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.2
@@ -254,6 +259,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 64438274248165340, guid: 79035093c9587c246b3bb29ffc5838a4, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -287,11 +296,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d472d061aadb87742bdb925a614a5958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurretControls
-  projectilePrefab: {fileID: 2511446009495730860, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
+  projectilePrefab: {fileID: 6060541677156383982, guid: ff0026fe9aa4894409fb80c7eab450a0, type: 3}
   firePoint: {fileID: 1264973938509469999}
   moveSpeed: 10
   fireDelayInSeconds: 1
   lastFired: 0
-  vcam: {fileID: 0}
   maxProjectiles: 1
   tetherLinePrefab: {fileID: 4152931203871008531, guid: b5d1ed4479dc68648afd00487c728706, type: 3}

@@ -25,13 +25,17 @@ public class MagnetProjectile : MonoBehaviour
 
     void Start()
     {
-        rb = this.transform.parent.GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         
         if (rb == null)
         {
             Debug.LogError("MagnetProjectile requires a Rigidbody2D component!");
             return;
         }
+
+        // Configure projectile physics independent from ship
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.gravityScale = 0f;
 
         Debug.Log($"Shot fired at speed {currentSpeed:F2}");
     }
@@ -79,8 +83,8 @@ public class MagnetProjectile : MonoBehaviour
                 // Clear the attached objects list
                 attachedObjects.Clear();
 
-                // Destroy the projectile
-                Destroy(gameObject.transform.parent.gameObject);
+                // Destroy only the projectile, not the ship
+                Destroy(gameObject);
             }
         }
 
@@ -99,6 +103,12 @@ public class MagnetProjectile : MonoBehaviour
 
         foreach (Collider2D collider in nearbyColliders)
         {
+            // Skip the ship/turret and its children
+            if (collider.transform.IsChildOf(turret.transform))
+            {
+                continue;
+            }
+
             if (collider.CompareTag("Metal"))
             {
                 Rigidbody2D targetRb = collider.GetComponent<Rigidbody2D>();
@@ -126,6 +136,9 @@ public class MagnetProjectile : MonoBehaviour
     {
         // Make the object a child of the projectile
         objectTransform.SetParent(transform);
+
+        // Swap the physics layer to projectile so that it is ignored by the ship
+        objectTransform.gameObject.layer = LayerMask.NameToLayer("Projectiles");
         
         // Stop its physics simulation
         targetRb.bodyType = RigidbodyType2D.Kinematic;
@@ -146,7 +159,7 @@ public class MagnetProjectile : MonoBehaviour
 
         if (rb == null)
         {
-            rb = this.transform.parent.GetComponent<Rigidbody2D>();
+            rb = GetComponent<Rigidbody2D>();
         }
 
         // Apply initial velocity as an impulse (instantaneous force)
