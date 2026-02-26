@@ -11,9 +11,12 @@ public class MagnetProjectile : MonoBehaviour
     public TurretControls turret; // Reference to the turret script that fired the projectile
     public int shotIndex; // Identifier for the shot, useful for tracking
     public bool isTethered = true;
+    public int tetherLength = 10; // Maximum length for tethering back to the turret
+    public float tetherPullForce = 15f; // Force applied when rope limit is reached
     public float magnetRadius = 15f; // Radius of the magnet effect
     public float magnetForce = 10f; // Force of the magnet pull
     public float attachDistance = 0.5f; // Distance at which objects attach to the magnet
+    public float rotationSpeed = 10f; // Speed at which projectile rotates to face tether
 
     private Rigidbody2D rb;
     private float holdDuration;
@@ -42,6 +45,11 @@ public class MagnetProjectile : MonoBehaviour
 
     void FixedUpdate()
     {
+        float distanceFromTurret = Vector2.Distance(transform.position, turret.firePoint.position);
+
+        // Rotate to face the tether line
+        RotateTowardTether();
+
         if (returningToTurret)
         {
             // Set the travel direction as the source can keep moving, so we need to update the direction every frame
@@ -52,7 +60,7 @@ public class MagnetProjectile : MonoBehaviour
             Vector2 velocityChange = requiredVelocity - rb.linearVelocity;
             rb.AddForce(velocityChange * rb.mass, ForceMode2D.Force);
             
-            if (Vector2.Distance(transform.position, turret.firePoint.position) < 0.5f)
+            if (distanceFromTurret < 0.5f)
             {
                 transform.position = turret.firePoint.position; // Snap to exact position
                 rb.linearVelocity = Vector2.zero;
@@ -90,11 +98,46 @@ public class MagnetProjectile : MonoBehaviour
 
         // Apply magnet effect
         ApplyMagnetEffect();
-        
+
+        // Apply rope effect when tether length is exceeded
+        if (distanceFromTurret > tetherLength && !returningToTurret)
+        {
+            Vector2 directionToTurret = (turret.firePoint.position - transform.position).normalized;
+            
+            // Check if projectile is moving away from the turret
+            float velocityDotProduct = Vector2.Dot(rb.linearVelocity, -directionToTurret);
+            
+            if (velocityDotProduct > 0) // Moving away from turret
+            {
+                // Remove the outward velocity component (snap the rope)
+                Vector2 outwardVelocity = velocityDotProduct * -directionToTurret;
+                rb.linearVelocity -= outwardVelocity;
+                
+                // Apply strong impulse to yank back (rope tension)
+                rb.AddForce(directionToTurret * tetherPullForce, ForceMode2D.Impulse);
+            }
+        }
+
         if (tetherLine != null)
         {
             this.tetherLine.UpdatePosition(turret.firePoint.position, transform.position); // Update the tether line position every frame
         }
+    }
+
+    private void RotateTowardTether()
+    {
+        // Calculate direction from turret to projectile
+        Vector2 tetherDirection = (transform.position - turret.firePoint.position).normalized;
+        
+        // Calculate target angle (perpendicular to tether line so flat side faces perpendicular)
+        float targetAngle = Mathf.Atan2(tetherDirection.y, tetherDirection.x) * Mathf.Rad2Deg;
+        
+        // Get current rotation
+        float currentAngle = transform.eulerAngles.z;
+        
+        // Smoothly rotate toward target angle
+        float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, Time.deltaTime * rotationSpeed);
+        transform.eulerAngles = new Vector3(0, 0, newAngle);
     }
 
     private void ApplyMagnetEffect()

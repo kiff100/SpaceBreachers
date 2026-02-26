@@ -126,9 +126,12 @@ MonoBehaviour:
   turret: {fileID: 0}
   shotIndex: 0
   isTethered: 1
+  tetherLength: 10
+  tetherPullForce: 3
   magnetRadius: 3
   magnetForce: 10
-  attachDistance: 2
+  attachDistance: 1.7
+  rotationSpeed: 10
 --- !u!1 &6363724827318064555
 GameObject:
   m_ObjectHideFlags: 0
