@@ -1345,7 +1345,7 @@ MonoBehaviour:
   targetShip: {fileID: 0}
   boardButton: {fileID: 2048943064}
   interactAction:
-    m_Name: 
+    m_Name: Interact
     m_Type: 0
     m_ExpectedControlType: 
     m_Id: 7451cd2c-01f7-4d35-9dcc-e519635381f6
@@ -1985,8 +1985,8 @@ SceneRoots:
   - {fileID: 103656293}
   - {fileID: 1684351888}
   - {fileID: 1587832011}
-  - {fileID: 1549510272409381635}
   - {fileID: 1142499797}
   - {fileID: 3213312890943633745}
   - {fileID: 684878840119776734}
   - {fileID: 1852318285}
+  - {fileID: 1549510272409381635}

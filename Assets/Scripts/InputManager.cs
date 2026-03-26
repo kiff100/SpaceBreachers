@@ -11,9 +11,12 @@ public class InputManager : MonoBehaviour
     [SerializeField] private GameObject boardButton;
     [SerializeField] private InputAction interactAction;
 
+    private TurretControls turretControls;
     private bool isBoardingEnabled = false;
     private GameObject spawnedSoldier;
     private Button boardButtonComponent;
+    private float fireHoldStartTime;
+    private bool wasFirePressed;
 
     void Start()
     {
@@ -23,21 +26,25 @@ public class InputManager : MonoBehaviour
         }
 
         // Set up the interact action
-        interactAction = InputSystem.actions.FindAction("Interact");
-        
-if (interactAction != null)
+        interactAction = InputSystem.actions.FindAction("Fire");
+
+        if (interactAction != null)
         {
             interactAction.started += OnInteractPerformed;
+            interactAction.canceled += OnInteractCanceled;
             interactAction.Enable();
         }
+
+        turretControls = playerShip.gameObject.GetComponentInChildren<TurretControls>();
     }
 
     void OnDestroy()
     {
-        // Clean up the action listener
+        // Clean up the action listeners
         if (interactAction != null)
         {
             interactAction.started -= OnInteractPerformed;
+            interactAction.canceled -= OnInteractCanceled;
         }
     }
 
@@ -48,10 +55,28 @@ if (interactAction != null)
         {
             ToggleBoardButton();
         }
-        // Spawn breacher soldier if boarding is enabled
+        // If boarding is disabled and turret is available, start tracking fire hold
+        else if (!isBoardingEnabled && turretControls != null)
+        {
+            fireHoldStartTime = Time.time;
+            wasFirePressed = true;
+            Debug.Log("Fire button pressed");
+        }
+    }
+
+    private void OnInteractCanceled(InputAction.CallbackContext context)
+    {
+        // Handle fire release if boarding is not enabled
+        if (wasFirePressed && !isBoardingEnabled && turretControls != null)
+        {
+            float holdDuration = Time.time - fireHoldStartTime;
+            turretControls.OnFireReleased(holdDuration);
+            Debug.Log($"Fire button released after {holdDuration:F2} seconds");
+            wasFirePressed = false;
+        }
+        // Handle boarding target detection if boarding is enabled
         else if (isBoardingEnabled)
         {
-            // Try to detect a boardable target
             Transform boardableTarget = DetectBoardableTarget();
             if (boardableTarget != null)
             {
@@ -121,7 +146,7 @@ if (interactAction != null)
         if (boardButtonComponent != null)
         {
             boardButtonComponent.interactable = !boardButtonComponent.interactable;
-            isBoardingEnabled = boardButtonComponent.interactable;
+            isBoardingEnabled = !boardButtonComponent.interactable;
 
             if (isBoardingEnabled)
             {
@@ -154,9 +179,10 @@ if (interactAction != null)
 
         // Spawn the BreacherSoldier at the player ship position
         spawnedSoldier = Instantiate(breacherSoldierPrefab, playerShip.position, Quaternion.identity);
+        BreacherSoldier breacherSoldier = spawnedSoldier.GetComponentInChildren<BreacherSoldier>();
 
         // Set the target ship destination
-        spawnedSoldier.GetComponentInChildren<BreacherSoldier>().SetTargetShip(targetForSoldier);
-        spawnedSoldier.GetComponentInChildren<BreacherSoldier>().SetPlayerShip(playerShip);
+        breacherSoldier.SetTargetShip(targetForSoldier);
+        breacherSoldier.SetPlayerShip(playerShip);
     }
 }

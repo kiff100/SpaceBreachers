@@ -9,7 +9,6 @@ using UnityEngine.InputSystem;
 public class TurretControls : MonoBehaviour
 {
     InputAction moveAction;
-    InputAction fireAction;
 
     public GameObject projectilePrefab;
     public Transform firePoint;
@@ -21,24 +20,16 @@ public class TurretControls : MonoBehaviour
 
     private Camera mainCamera;
     private Collider2D turretCollider;
-    private float fireHoldStartTime;
-    private bool wasFirePressed;
     private List<MagnetProjectile> projectiles = new List<MagnetProjectile>();
     private List<TetherLine> tetherLines = new List<TetherLine>();
 
     void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
-        fireAction = InputSystem.actions.FindAction("Interact");
-        
-        if (fireAction == null)
-        {
-            Debug.LogError("Fire action not found in input system!");
-        }
-        
+
         turretCollider = GetComponent<Collider2D>();
         lastFired = -fireDelayInSeconds;
-        
+
         CinemachineBrain cinemachineBrain = CinemachineBrain.GetActiveBrain(0);
         if (cinemachineBrain == null)
         {
@@ -49,57 +40,42 @@ public class TurretControls : MonoBehaviour
 
     void Update()
     {
-        HandleFire();
+        // Update method no longer handles input
     }
 
-    void HandleFire()
+    public void OnFireReleased(float holdDuration)
     {
-        if (fireAction.IsPressed())
+        if (Time.time - lastFired >= fireDelayInSeconds && projectiles.Count < maxProjectiles)
         {
-            if (!wasFirePressed)
+            if (Camera.main == null)
             {
-                fireHoldStartTime = Time.time;
-                wasFirePressed = true;
+                Debug.LogError("Main camera not found!");
+                return;
             }
+
+            if (firePoint == null)
+            {
+                Debug.LogError("Fire point not assigned!");
+                return;
+            }
+
+            Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
+            mouseScreenPos.z = -Camera.main.transform.position.z;
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+            Vector2 direction = GetProjectileDirection(mouseWorldPos, this.firePoint.position);
+            FireProjectile(holdDuration, direction);
+            lastFired = Time.time;
+            Debug.Log($"Fire! Hold duration: {holdDuration:F2} seconds, Direction: {direction}");
         }
-        else if (wasFirePressed)
+        else if (projectiles.Count >= maxProjectiles)
         {
-            if (Time.time - lastFired >= fireDelayInSeconds && projectiles.Count < maxProjectiles)
+            foreach (MagnetProjectile projectile in projectiles)
             {
-                if (Camera.main == null)
+                if (projectile != null)
                 {
-                    Debug.LogError("Main camera not found!");
-                    wasFirePressed = false;
-                    return;
-                }
-
-                if (firePoint == null)
-                {
-                    Debug.LogError("Fire point not assigned!");
-                    wasFirePressed = false;
-                    return;
-                }
-
-                float holdDuration = Time.time - fireHoldStartTime;
-                Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
-                mouseScreenPos.z = -Camera.main.transform.position.z;
-                Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
-                Vector2 direction = GetProjectileDirection(mouseWorldPos, this.firePoint.position);
-                FireProjectile(holdDuration, direction);
-                lastFired = Time.time;
-                Debug.Log($"Fire! Hold duration: {holdDuration:F2} seconds, Direction: {direction}");
-            }
-            else if (projectiles.Count >= maxProjectiles)
-            {
-                foreach (MagnetProjectile projectile in projectiles)
-                {
-                    if (projectile != null)
-                    {
-                        projectile.ReturnToTurret();
-                    }
+                    projectile.ReturnToTurret();
                 }
             }
-            wasFirePressed = false;
         }
     }
 
