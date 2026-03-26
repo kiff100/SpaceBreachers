@@ -29,7 +29,7 @@ public class TurretControls : MonoBehaviour
     void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
-        fireAction = InputSystem.actions.FindAction("Fire");
+        fireAction = InputSystem.actions.FindAction("Interact");
         
         if (fireAction == null)
         {
