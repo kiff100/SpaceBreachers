@@ -1505,6 +1505,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1898616985}
   m_CullTransparentMesh: 1
+--- !u!1 &1932695134 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1751233577671362102, guid: 7bc3bd7d9978f4249a057c674ce5c5d3, type: 3}
+  m_PrefabInstance: {fileID: 684878840119776734}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1932695138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932695134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d924f59ab34d588488d8dc49f6401b89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyShip
+  enemyBreacherPrefab: {fileID: 6724837705920787914, guid: fd993701f5bf32e49b74fa8053d47dc9, type: 3}
+  spawnPoint: {fileID: 0}
+  playerShip: {fileID: 2006658726}
+  detectionRange: 20
+  minSoldierCount: 0
+  maxSoldierCount: 5
+  spawnInterval: 2
+  enemyColor: {r: 1, g: 0, b: 0, a: 1}
+  enemyMaterial: {fileID: 2100000, guid: 6fbc729ff8c442a4eb78b46b40e53afd, type: 2}
 --- !u!4 &2006658726 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1602933603875880425, guid: 9be767ed11882c74dad8fed3c63cbedf, type: 3}
@@ -1831,7 +1857,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1751233577671362102, guid: 7bc3bd7d9978f4249a057c674ce5c5d3, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 1932695138}
   m_SourcePrefab: {fileID: 100100000, guid: 7bc3bd7d9978f4249a057c674ce5c5d3, type: 3}
 --- !u!1001 &1549510272409381635
 PrefabInstance:
