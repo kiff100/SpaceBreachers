@@ -9,6 +9,7 @@ public class MagnetProjectile : MonoBehaviour
     public float minSpeed = 5f;
     public float decelerationRate = 2f; // Speed decrease per second
     public TurretControls turret; // Reference to the turret script that fired the projectile
+    public ObjectInventory playerInventory; // Reference to the player's inventory for collecting items
     public int shotIndex; // Identifier for the shot, useful for tracking
     public bool isTethered = true;
     public int tetherLength = 10; // Maximum length for tethering back to the turret
@@ -39,6 +40,9 @@ public class MagnetProjectile : MonoBehaviour
         // Configure projectile physics independent from ship
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 0f;
+
+        // Add player inventory reference here from turret reference
+        playerInventory = turret.transform.parent.GetComponent<ObjectInventory>();
 
         Debug.Log($"Shot fired at speed {currentSpeed:F2}");
     }
@@ -83,7 +87,44 @@ public class MagnetProjectile : MonoBehaviour
                         attachedRb.bodyType = RigidbodyType2D.Dynamic; // Restore physics
                     }
 
-                    Destroy(attached.gameObject);
+                    // Try to transfer the object to player inventory
+                    if (playerInventory != null)
+                    {
+                        // Check if the object has a CollectibleItem component
+                        CollectibleItem collectibleItem = attached.GetComponent<CollectibleItem>();
+
+                        ObjectInventory.ItemType itemType = ObjectInventory.ItemType.ScrapMetal;
+                        float quantity = 1f;
+
+                        if (collectibleItem != null)
+                        {
+                            itemType = collectibleItem.ItemType;
+                            quantity = collectibleItem.Quantity;
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"CollectibleItem component not found on {attached.gameObject.name}, defaulting to ScrapMetal x1");
+                        }
+
+                        // Try to add the item to inventory
+                        bool transferSuccessful = playerInventory.AddItem(itemType, quantity);
+
+                        if (transferSuccessful)
+                        {
+                            Debug.Log($"Collected {quantity} {itemType} from {attached.gameObject.name}");
+                            Destroy(attached.gameObject);
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"Player inventory full! Cannot collect {quantity} {itemType}. Detaching: {attached.gameObject.name}");
+                            // Don't destroy, just leave it floating
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Player inventory not assigned to MagnetProjectile");
+                        Destroy(attached.gameObject);
+                    }
 
                     // TODO: Update the amount of metal collected in the ship cargo
                 }

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3019202551998928315}
+  - component: {fileID: -9006967976384289045}
   - component: {fileID: 6183594821698197027}
   - component: {fileID: 8369558596913902311}
   m_Layer: 0
@@ -34,6 +35,20 @@ Transform:
   - {fileID: 1091274300070820842}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-9006967976384289045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8576079684715407642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccaa0c537c34e7045acb6d7e6d4fcec9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CollectibleItem
+  itemType: 4
+  quantity: 5
 --- !u!61 &6183594821698197027
 BoxCollider2D:
   m_ObjectHideFlags: 0

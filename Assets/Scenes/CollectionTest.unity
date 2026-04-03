@@ -375,9 +375,9 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  starRadiusMin: 0.05
-  starRadiusMax: 0.1
-  starRadiusBias: 5
+  starRadiusMin: 0.01
+  starRadiusMax: 0.04
+  starRadiusBias: 1
   starPulseSpeedMin: 0
   starPulseSpeedMax: 0
   model: {fileID: 2075679200}
@@ -2148,8 +2148,31 @@ PrefabInstance:
     - {fileID: 1755152209864197011, guid: 9be767ed11882c74dad8fed3c63cbedf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7348056330425802633, guid: 9be767ed11882c74dad8fed3c63cbedf, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 1549510272409381637}
   m_SourcePrefab: {fileID: 100100000, guid: 9be767ed11882c74dad8fed3c63cbedf, type: 3}
+--- !u!1 &1549510272409381636 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7348056330425802633, guid: 9be767ed11882c74dad8fed3c63cbedf, type: 3}
+  m_PrefabInstance: {fileID: 1549510272409381635}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1549510272409381637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549510272409381636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea1ada7edca6a384cb1c437b405671d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectInventory
+  inventoryName: Player Inventory
+  maxCapacity: 100
+  hasCapacityLimit: 1
 --- !u!1001 &3213312890943633745
 PrefabInstance:
   m_ObjectHideFlags: 0
