@@ -260,17 +260,17 @@ public class MagnetProjectile : MonoBehaviour
         Debug.Log($"Returning projectile to turret at direction {travelDirection}");
     }
 
-    public override bool Equals(object other)
-    {
-        if (other == null) return false;
+    //public override bool Equals(object other)
+    //{
+    //    if (other == null) return false;
 
-        if (other is MagnetProjectile otherProjectile)
-        {
-            return this.shotIndex == otherProjectile.shotIndex;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    //    if (other is MagnetProjectile otherProjectile)
+    //    {
+    //        return this.shotIndex == otherProjectile.shotIndex;
+    //    }
+    //    else
+    //    {
+    //        return false;
+    //    }
+    //}
 }

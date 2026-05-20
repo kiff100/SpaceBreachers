@@ -17,6 +17,8 @@ public class InputManager : MonoBehaviour
     private Button boardButtonComponent;
     private float fireHoldStartTime;
     private bool wasFirePressed;
+    private InputAction pauseAction;
+    private bool isGamePaused = false;
 
     void Start()
     {
@@ -35,6 +37,19 @@ public class InputManager : MonoBehaviour
             interactAction.Enable();
         }
 
+        // Set up the pause action
+        pauseAction = InputSystem.actions.FindAction("Pause");
+
+        if (pauseAction != null)
+        {
+            pauseAction.started += OnPausePerformed;
+            pauseAction.Enable();
+        }
+        else
+        {
+            Debug.LogWarning("InputManager: 'Pause' action not found in Input Actions!");
+        }
+
         turretControls = playerShip.gameObject.GetComponentInChildren<TurretControls>();
     }
 
@@ -45,6 +60,11 @@ public class InputManager : MonoBehaviour
         {
             interactAction.started -= OnInteractPerformed;
             interactAction.canceled -= OnInteractCanceled;
+        }
+
+        if (pauseAction != null)
+        {
+            pauseAction.started -= OnPausePerformed;
         }
     }
 
@@ -184,5 +204,25 @@ public class InputManager : MonoBehaviour
         // Set the target ship destination
         breacherSoldier.SetTargetShip(targetForSoldier);
         breacherSoldier.SetPlayerShip(playerShip);
+    }
+
+    private void OnPausePerformed(InputAction.CallbackContext context)
+    {
+        TogglePause();
+    }
+
+    private void TogglePause()
+    {
+        isGamePaused = !isGamePaused;
+        Time.timeScale = isGamePaused ? 0f : 1f;
+
+        if (isGamePaused)
+        {
+            Debug.Log("Game paused");
+        }
+        else
+        {
+            Debug.Log("Game resumed");
+        }
     }
 }

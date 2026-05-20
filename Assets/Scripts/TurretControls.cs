@@ -1,5 +1,3 @@
-using Opsive.Shared.Utility;
-using Opsive.UltimateCharacterController.Game;
 using System;
 using System.Collections.Generic;
 using Unity.Cinemachine;
