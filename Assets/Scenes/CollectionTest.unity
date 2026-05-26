@@ -423,7 +423,7 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 401387563}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 13
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
@@ -475,7 +475,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
-  m_ShadowRadius: 0
+  m_ShapeRadius: 0
   m_ShadowAngle: 0
   m_LightUnit: 1
   m_LuxAtDistance: 1
@@ -898,6 +898,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -1297,6 +1298,16 @@ MonoBehaviour:
   debrisPrefabs:
   - {fileID: 8576079684715407642, guid: eefffc4ac3e41b049a063001260b8692, type: 3}
   - {fileID: 6525166761047374384, guid: 43e2599141fa4dd409511868d7b98c18, type: 3}
+  - {fileID: 7971092446205773348, guid: e85599f33954ef14d9a54fb9770ca45d, type: 3}
+  - {fileID: 6632756896673027577, guid: 97ff8ae5ebf196348b324005232209d9, type: 3}
+  - {fileID: 1019077023816870587, guid: d2898b0a59e58e844ac05575064bee06, type: 3}
+  - {fileID: 2101566154550864636, guid: 825f094e9e2b12f48b1f9a7f3918e04a, type: 3}
+  - {fileID: 1242638691028886327, guid: be1d31d036a7ecf4fb5c7db6bedf5631, type: 3}
+  - {fileID: 1826685167895775740, guid: 388aee66b482cad4a91d52050b3534d3, type: 3}
+  - {fileID: 8454518673781291179, guid: 1ed2f1fcf8225ce4aa84c4c25b4125d2, type: 3}
+  - {fileID: 1239229770052653668, guid: b4c5049cbcb0e864bbb4bc8db2a9cae8, type: 3}
+  - {fileID: 5835561319446637645, guid: ea47737cdd904f849b299feab85a94a0, type: 3}
+  - {fileID: 7929727608414519170, guid: acab18265043a5c40abc60aa5739e542, type: 3}
   spawnZones: []
   minDebrisDistance: 2
   minAngularVelocity: -360
