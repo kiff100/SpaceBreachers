@@ -31,8 +31,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6451704152189972725}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &7162810543980608360
@@ -97,11 +96,15 @@ MonoBehaviour:
   minSpeed: 5
   decelerationRate: 1
   turret: {fileID: 0}
+  playerInventory: {fileID: 0}
   shotIndex: 0
   isTethered: 1
+  tetherLength: 50
+  tetherPullForce: 15
   magnetRadius: 3
   magnetForce: 10
   attachDistance: 2
+  rotationSpeed: 10
 --- !u!50 &2066127494197632324
 Rigidbody2D:
   serializedVersion: 5
@@ -129,72 +132,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!1001 &5398528086554542495
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 5228018846081267495}
-    m_Modifications:
-    - target: {fileID: 1396786652180885866, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396786652180885866, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396786652180885866, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396786652180885866, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396786652180885866, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396786652180885866, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396786652180885866, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396786652180885866, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 270
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396786652180885866, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396786652180885866, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2511446009495730860, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_Name
-      value: Magnet
-      objectReference: {fileID: 0}
-    - target: {fileID: 6468850354178679522, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-      propertyPath: m_Simulated
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8324159583432180671, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-    - {fileID: 1852249835672590926, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-    - {fileID: 6468850354178679522, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
---- !u!4 &6451704152189972725 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1396786652180885866, guid: 7ac92a3aede259a449e3731fd8142020, type: 3}
-  m_PrefabInstance: {fileID: 5398528086554542495}
-  m_PrefabAsset: {fileID: 0}

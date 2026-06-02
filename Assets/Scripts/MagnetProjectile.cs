@@ -42,7 +42,7 @@ public class MagnetProjectile : MonoBehaviour
         rb.gravityScale = 0f;
 
         // Add player inventory reference here from turret reference
-        playerInventory = turret.transform.parent.GetComponent<ObjectInventory>();
+        playerInventory = turret.GetComponentInParent<ObjectInventory>();
 
         Debug.Log($"Shot fired at speed {currentSpeed:F2}");
     }

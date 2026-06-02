@@ -50,7 +50,7 @@ public class InputManager : MonoBehaviour
             Debug.LogWarning("InputManager: 'Pause' action not found in Input Actions!");
         }
 
-        turretControls = playerShip.gameObject.GetComponentInChildren<TurretControls>();
+        turretControls = targetShip.gameObject.GetComponentInChildren<TurretControls>();
     }
 
     void OnDestroy()

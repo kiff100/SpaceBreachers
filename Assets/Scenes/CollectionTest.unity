@@ -119,6 +119,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &52216895
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 52216896}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &52216896
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52216895}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: -0.5}
+  m_LocalPosition: {x: -5.6, y: 0, z: 6.5}
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1451077276}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &103656290
 GameObject:
   m_ObjectHideFlags: 0
@@ -1178,9 +1209,44 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4507997359314912, guid: 909e2c7775ffdbd4992cd487afb004f0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 52216896}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1977200293512502, guid: 909e2c7775ffdbd4992cd487afb004f0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1451077277}
   m_SourcePrefab: {fileID: 100100000, guid: 909e2c7775ffdbd4992cd487afb004f0, type: 3}
+--- !u!1 &1451077275 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1977200293512502, guid: 909e2c7775ffdbd4992cd487afb004f0, type: 3}
+  m_PrefabInstance: {fileID: 1451077274}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1451077276 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4507997359314912, guid: 909e2c7775ffdbd4992cd487afb004f0, type: 3}
+  m_PrefabInstance: {fileID: 1451077274}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1451077277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451077275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d472d061aadb87742bdb925a614a5958, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TurretControls
+  projectilePrefab: {fileID: 6060541677156383982, guid: ff0026fe9aa4894409fb80c7eab450a0, type: 3}
+  firePoint: {fileID: 52216896}
+  moveSpeed: 10
+  fireDelayInSeconds: 1
+  lastFired: 0
+  maxProjectiles: 1
+  tetherLinePrefab: {fileID: 4152931203871008531, guid: b5d1ed4479dc68648afd00487c728706, type: 3}
 --- !u!1 &1491942129
 GameObject:
   m_ObjectHideFlags: 0
@@ -1522,7 +1588,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InputManager
   breacherSoldierPrefab: {fileID: 6724837705920787914, guid: fd993701f5bf32e49b74fa8053d47dc9, type: 3}
   playerShip: {fileID: 2006658726}
-  targetShip: {fileID: 0}
+  targetShip: {fileID: 1451077276}
   boardButton: {fileID: 2048943064}
   interactAction:
     m_Name: Interact
@@ -2226,7 +2292,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1755152209864197011, guid: 9be767ed11882c74dad8fed3c63cbedf, type: 3}
-    m_RemovedGameObjects: []
+    - {fileID: 7396397144779431998, guid: 9be767ed11882c74dad8fed3c63cbedf, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 3377446522640073962, guid: 9be767ed11882c74dad8fed3c63cbedf, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7348056330425802633, guid: 9be767ed11882c74dad8fed3c63cbedf, type: 3}
