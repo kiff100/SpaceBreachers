@@ -124,9 +124,10 @@ MonoBehaviour:
   minSpeed: 5
   decelerationRate: 1
   turret: {fileID: 0}
+  playerInventory: {fileID: 0}
   shotIndex: 0
   isTethered: 1
-  tetherLength: 10
+  tetherLength: 50
   tetherPullForce: 3
   magnetRadius: 3
   magnetForce: 10

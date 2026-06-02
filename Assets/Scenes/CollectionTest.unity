@@ -309,11 +309,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 14.551485, y: 30.479136}
-      - {x: -1.845588, y: 14.907595}
-      - {x: 18.233511, y: -2.4283924}
-      - {x: 48.117126, y: -0.91605306}
-      - {x: 54.811592, y: 30.701546}
+    - - {x: 15.03882, y: 31.616253}
+      - {x: -51.673183, y: 31.045168}
+      - {x: -51.63074, y: -24.396223}
+      - {x: -9.819232, y: -6.915913}
+      - {x: 8.561949, y: -6.666151}
+      - {x: 51.27281, y: -25.314993}
+      - {x: 52.00397, y: 31.912374}
   m_UseDelaunayMesh: 1
 --- !u!114 &167430279
 MonoBehaviour:
@@ -555,6 +557,55 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &409568033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 409568035}
+  - component: {fileID: 409568034}
+  m_Layer: 0
+  m_Name: Global Post-Processing
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &409568034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409568033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 0}
+--- !u!4 &409568035
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409568033}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &783205355
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,6 +1268,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1977200293512502, guid: 909e2c7775ffdbd4992cd487afb004f0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1451077277}
+    - targetCorrespondingSourceObject: {fileID: 1977200293512502, guid: 909e2c7775ffdbd4992cd487afb004f0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1451077281}
   m_SourcePrefab: {fileID: 100100000, guid: 909e2c7775ffdbd4992cd487afb004f0, type: 3}
 --- !u!1 &1451077275 stripped
 GameObject:
@@ -1247,6 +1301,21 @@ MonoBehaviour:
   lastFired: 0
   maxProjectiles: 1
   tetherLinePrefab: {fileID: 4152931203871008531, guid: b5d1ed4479dc68648afd00487c728706, type: 3}
+--- !u!114 &1451077281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451077275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea1ada7edca6a384cb1c437b405671d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectInventory
+  inventoryName: Cargo Inventory
+  maxCapacity: 500
+  hasCapacityLimit: 1
 --- !u!1 &1491942129
 GameObject:
   m_ObjectHideFlags: 0
@@ -2340,3 +2409,4 @@ SceneRoots:
   - {fileID: 1549510272409381635}
   - {fileID: 340249198}
   - {fileID: 1451077274}
+  - {fileID: 409568035}

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6706682694262001048}
   m_Layer: 0
   m_Name: Debris_Barrel_01
-  m_TagString: Untagged
+  m_TagString: Metal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
