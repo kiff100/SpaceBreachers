@@ -82,6 +82,11 @@ public class InputManager : MonoBehaviour
             wasFirePressed = true;
             Debug.Log("Fire button pressed");
         }
+        else if (isBoardingEnabled)
+        {
+            // Fire is blocked when boarding is enabled
+            Debug.Log("Fire blocked - Boarding mode is active");
+        }
     }
 
     private void OnInteractCanceled(InputAction.CallbackContext context)
@@ -165,16 +170,19 @@ public class InputManager : MonoBehaviour
     {
         if (boardButtonComponent != null)
         {
-            boardButtonComponent.interactable = !boardButtonComponent.interactable;
-            isBoardingEnabled = !boardButtonComponent.interactable;
-
             if (isBoardingEnabled)
             {
-                Debug.Log("Board button toggled ON - Boarding enabled");
+                // If boarding is already enabled, disable it
+                boardButtonComponent.interactable = false;
+                isBoardingEnabled = false;
+                Debug.Log("Board button toggled OFF - Boarding disabled");
             }
             else
             {
-                Debug.Log("Board button toggled OFF - Boarding disabled");
+                // If boarding is disabled, enable it (this is the only button that can be enabled)
+                boardButtonComponent.interactable = true;
+                isBoardingEnabled = true;
+                Debug.Log("Board button toggled ON - Boarding enabled");
             }
         }
     }
