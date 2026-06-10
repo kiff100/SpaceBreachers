@@ -1,35 +1,46 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class InputManager : MonoBehaviour
 {
+    // Number of selectable digit slots (keys 0 through 9).
+    private const int SlotCount = 10;
+    // The digit label of the boarding button.
+    private const int BoardSlot = 2;
+
     [SerializeField] private GameObject breacherSoldierPrefab;
     [SerializeField] private Transform playerShip;
     [SerializeField] private Transform targetShip;
-    [SerializeField] private GameObject boardButton;
-    [SerializeField] private InputAction interactAction;
 
     private TurretControls turretControls;
     private bool isBoardingEnabled = false;
     private GameObject spawnedSoldier;
-    private Button boardButtonComponent;
     private float fireHoldStartTime;
     private bool wasFirePressed;
+
+    private InputAction interactAction;
     private InputAction pauseAction;
     private bool isGamePaused = false;
 
+    // Digit-indexed slots (0-9). A slot is null when no button carries that label.
+    private readonly Button[] _slotButtons = new Button[SlotCount];
+    private readonly InputAction[] _slotActions = new InputAction[SlotCount];
+    private readonly System.Action<InputAction.CallbackContext>[] _slotKeyHandlers =
+        new System.Action<InputAction.CallbackContext>[SlotCount];
+    private readonly UnityAction[] _slotClickHandlers = new UnityAction[SlotCount];
+
+    // Index of the currently active slot, or -1 when none is active.
+    private int _activeSlot = -1;
+    // Guards against re-entrancy when programmatically invoking a button's onClick.
+    private bool _isSelecting;
+
     void Start()
     {
-        if (boardButton != null)
-        {
-            boardButtonComponent = boardButton.GetComponent<Button>();
-        }
-
-        // Set up the interact action
         interactAction = InputSystem.actions.FindAction("Fire");
-
         if (interactAction != null)
         {
             interactAction.started += OnInteractPerformed;
@@ -37,9 +48,7 @@ public class InputManager : MonoBehaviour
             interactAction.Enable();
         }
 
-        // Set up the pause action
         pauseAction = InputSystem.actions.FindAction("Pause");
-
         if (pauseAction != null)
         {
             pauseAction.started += OnPausePerformed;
@@ -50,12 +59,16 @@ public class InputManager : MonoBehaviour
             Debug.LogWarning("InputManager: 'Pause' action not found in Input Actions!");
         }
 
-        turretControls = targetShip.gameObject.GetComponentInChildren<TurretControls>();
+        if (targetShip != null)
+        {
+            turretControls = targetShip.GetComponentInChildren<TurretControls>();
+        }
+
+        SetupSlots();
     }
 
     void OnDestroy()
     {
-        // Clean up the action listeners
         if (interactAction != null)
         {
             interactAction.started -= OnInteractPerformed;
@@ -66,26 +79,150 @@ public class InputManager : MonoBehaviour
         {
             pauseAction.started -= OnPausePerformed;
         }
+
+        for (int i = 0; i < SlotCount; i++)
+        {
+            if (_slotActions[i] != null && _slotKeyHandlers[i] != null)
+            {
+                _slotActions[i].performed -= _slotKeyHandlers[i];
+            }
+
+            if (_slotButtons[i] != null && _slotClickHandlers[i] != null)
+            {
+                _slotButtons[i].onClick.RemoveListener(_slotClickHandlers[i]);
+            }
+        }
+    }
+
+    // Discovers numbered buttons in the overlay and wires both mouse clicks and
+    // keyboard digit actions through the same single-selection entry point.
+    private void SetupSlots()
+    {
+        GameObject canvasOverlay = GameObject.Find("CanvasOverlay");
+        if (canvasOverlay != null)
+        {
+            Button[] buttons = canvasOverlay.GetComponentsInChildren<Button>(true);
+            foreach (var button in buttons)
+            {
+                TMP_Text label = button.GetComponentInChildren<TMP_Text>();
+                if (label == null) continue;
+
+                if (!int.TryParse(label.text.Trim(), out int digit)) continue;
+                if (digit < 0 || digit >= SlotCount) continue;
+
+                _slotButtons[digit] = button;
+
+                // Route mouse clicks through the unified selection handler.
+                int captured = digit;
+                UnityAction clickHandler = () => OnSlotSelected(captured);
+                _slotClickHandlers[digit] = clickHandler;
+                button.onClick.AddListener(clickHandler);
+            }
+        }
+
+        // Subscribe each digit key. A key simulates a click on its matching button,
+        // so keyboard and mouse share the exact same activation path.
+        for (int i = 0; i < SlotCount; i++)
+        {
+            int captured = i;
+            _slotKeyHandlers[i] = ctx => OnSlotKeyPressed(captured);
+            _slotActions[i] = InputSystem.actions.FindAction("SelectSlot" + i);
+            if (_slotActions[i] != null)
+            {
+                _slotActions[i].performed += _slotKeyHandlers[i];
+                _slotActions[i].Enable();
+            }
+        }
+    }
+
+    // Keyboard entry point: forwards to the matching button's click, if one exists.
+    private void OnSlotKeyPressed(int digit)
+    {
+        Button button = _slotButtons[digit];
+        if (button == null) return;
+
+        // Invoking onClick triggers OnSlotSelected (and any game listeners),
+        // mirroring a real mouse click exactly.
+        button.onClick.Invoke();
+    }
+
+    // Single source of truth for activation. Enforces that only one slot is active
+    // at a time, regardless of whether the trigger was a mouse click or a key press.
+    private void OnSlotSelected(int digit)
+    {
+        if (_isSelecting) return;
+        _isSelecting = true;
+
+        try
+        {
+            if (_activeSlot == digit)
+            {
+                // Re-selecting the active slot toggles it off.
+                Deactivate(digit);
+                _activeSlot = -1;
+            }
+            else
+            {
+                if (_activeSlot >= 0)
+                {
+                    Deactivate(_activeSlot);
+                }
+
+                _activeSlot = digit;
+                Activate(digit);
+            }
+        }
+        finally
+        {
+            _isSelecting = false;
+        }
+    }
+
+    private void Activate(int digit)
+    {
+        if (digit == BoardSlot)
+        {
+            isBoardingEnabled = true;
+            Debug.Log("Boarding enabled");
+        }
+
+        Button button = _slotButtons[digit];
+        if (button != null && EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(button.gameObject);
+        }
+    }
+
+    private void Deactivate(int digit)
+    {
+        if (digit == BoardSlot)
+        {
+            isBoardingEnabled = false;
+            Debug.Log("Boarding disabled");
+        }
+
+        Button button = _slotButtons[digit];
+        if (button != null && EventSystem.current != null &&
+            EventSystem.current.currentSelectedGameObject == button.gameObject)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
-        // Check if the button was clicked
-        if (IsButtonClicked(boardButton))
+        // While boarding is active, the fire/turret action is suppressed.
+        if (isBoardingEnabled)
         {
-            ToggleBoardButton();
+            Debug.Log("Fire blocked - Boarding mode is active");
+            return;
         }
-        // If boarding is disabled and turret is available, start tracking fire hold
-        else if (!isBoardingEnabled && turretControls != null)
+
+        if (turretControls != null)
         {
             fireHoldStartTime = Time.time;
             wasFirePressed = true;
             Debug.Log("Fire button pressed");
-        }
-        else if (isBoardingEnabled)
-        {
-            // Fire is blocked when boarding is enabled
-            Debug.Log("Fire blocked - Boarding mode is active");
         }
     }
 
@@ -142,49 +279,6 @@ public class InputManager : MonoBehaviour
         }
 
         return null;
-    }
-
-    private bool IsButtonClicked(GameObject button)
-    {
-        if (button == null)
-        {
-            return false;
-        }
-
-        // Get the RectTransform of the button
-        RectTransform buttonRect = button.GetComponent<RectTransform>();
-        if (buttonRect == null)
-        {
-            Debug.LogWarning("Board button does not have a RectTransform component");
-            return false;
-        }
-
-        // Get the current mouse position
-        Vector2 mousePos = Mouse.current.position.ReadValue();
-
-        // Check if the mouse position is within the button's rect
-        return RectTransformUtility.RectangleContainsScreenPoint(buttonRect, mousePos);
-    }
-
-    private void ToggleBoardButton()
-    {
-        if (boardButtonComponent != null)
-        {
-            if (isBoardingEnabled)
-            {
-                // If boarding is already enabled, disable it
-                boardButtonComponent.interactable = false;
-                isBoardingEnabled = false;
-                Debug.Log("Board button toggled OFF - Boarding disabled");
-            }
-            else
-            {
-                // If boarding is disabled, enable it (this is the only button that can be enabled)
-                boardButtonComponent.interactable = true;
-                isBoardingEnabled = true;
-                Debug.Log("Board button toggled ON - Boarding enabled");
-            }
-        }
     }
 
     private void HandleBoardingCommand(Transform boardableTarget = null)
