@@ -17,8 +17,6 @@ public class InputManager : MonoBehaviour
     [SerializeField] private Transform targetShip;
 
     private TurretControls turretControls;
-    private bool isBoardingEnabled = false;
-    private GameObject spawnedSoldier;
     private float fireHoldStartTime;
     private bool wasFirePressed;
 
@@ -26,9 +24,10 @@ public class InputManager : MonoBehaviour
     private InputAction pauseAction;
     private bool isGamePaused = false;
 
-    // Digit-indexed slots (0-9). A slot is null when no button carries that label.
+    // Digit-indexed slots (0-9). An entry is null when no button carries that label.
     private readonly Button[] _slotButtons = new Button[SlotCount];
-    private readonly InputAction[] _slotActions = new InputAction[SlotCount];
+    private readonly IButtonAction[] _buttonActions = new IButtonAction[SlotCount];
+    private readonly InputAction[] _slotInputActions = new InputAction[SlotCount];
     private readonly System.Action<InputAction.CallbackContext>[] _slotKeyHandlers =
         new System.Action<InputAction.CallbackContext>[SlotCount];
     private readonly UnityAction[] _slotClickHandlers = new UnityAction[SlotCount];
@@ -37,6 +36,9 @@ public class InputManager : MonoBehaviour
     private int _activeSlot = -1;
     // Guards against re-entrancy when programmatically invoking a button's onClick.
     private bool _isSelecting;
+
+    // The behavior of the currently active button, or null when none is selected.
+    private IButtonAction ActiveAction => _activeSlot >= 0 ? _buttonActions[_activeSlot] : null;
 
     void Start()
     {
@@ -82,9 +84,9 @@ public class InputManager : MonoBehaviour
 
         for (int i = 0; i < SlotCount; i++)
         {
-            if (_slotActions[i] != null && _slotKeyHandlers[i] != null)
+            if (_slotInputActions[i] != null && _slotKeyHandlers[i] != null)
             {
-                _slotActions[i].performed -= _slotKeyHandlers[i];
+                _slotInputActions[i].performed -= _slotKeyHandlers[i];
             }
 
             if (_slotButtons[i] != null && _slotClickHandlers[i] != null)
@@ -94,8 +96,8 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    // Discovers numbered buttons in the overlay and wires both mouse clicks and
-    // keyboard digit actions through the same single-selection entry point.
+    // Discovers numbered buttons in the overlay, creates each button's action, and
+    // wires mouse clicks and keyboard digit keys through the same selection entry point.
     private void SetupSlots()
     {
         GameObject canvasOverlay = GameObject.Find("CanvasOverlay");
@@ -111,6 +113,7 @@ public class InputManager : MonoBehaviour
                 if (digit < 0 || digit >= SlotCount) continue;
 
                 _slotButtons[digit] = button;
+                _buttonActions[digit] = CreateAction(digit);
 
                 // Route mouse clicks through the unified selection handler.
                 int captured = digit;
@@ -126,12 +129,27 @@ public class InputManager : MonoBehaviour
         {
             int captured = i;
             _slotKeyHandlers[i] = ctx => OnSlotKeyPressed(captured);
-            _slotActions[i] = InputSystem.actions.FindAction("SelectSlot" + i);
-            if (_slotActions[i] != null)
+            _slotInputActions[i] = InputSystem.actions.FindAction("SelectSlot" + i);
+            if (_slotInputActions[i] != null)
             {
-                _slotActions[i].performed += _slotKeyHandlers[i];
-                _slotActions[i].Enable();
+                _slotInputActions[i].performed += _slotKeyHandlers[i];
+                _slotInputActions[i].Enable();
             }
+        }
+    }
+
+    // Maps a button's digit label to its behavior implementation.
+    private IButtonAction CreateAction(int digit)
+    {
+        switch (digit)
+        {
+            case 1: return new ToolSelectButtonAction();
+            case BoardSlot: return new BoardingButtonAction(breacherSoldierPrefab, playerShip, targetShip);
+            case 3: return new LaserButtonAction();
+            case 4: return new DroneButtonAction();
+            case 5: return new SpearButtonAction();
+            case 6: return new WarpButtonAction();
+            default: return null;
         }
     }
 
@@ -180,11 +198,7 @@ public class InputManager : MonoBehaviour
 
     private void Activate(int digit)
     {
-        if (digit == BoardSlot)
-        {
-            isBoardingEnabled = true;
-            Debug.Log("Boarding enabled");
-        }
+        _buttonActions[digit]?.OnActivated();
 
         Button button = _slotButtons[digit];
         if (button != null && EventSystem.current != null)
@@ -195,11 +209,7 @@ public class InputManager : MonoBehaviour
 
     private void Deactivate(int digit)
     {
-        if (digit == BoardSlot)
-        {
-            isBoardingEnabled = false;
-            Debug.Log("Boarding disabled");
-        }
+        _buttonActions[digit]?.OnDeactivated();
 
         Button button = _slotButtons[digit];
         if (button != null && EventSystem.current != null &&
@@ -211,10 +221,10 @@ public class InputManager : MonoBehaviour
 
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
-        // While boarding is active, the fire/turret action is suppressed.
-        if (isBoardingEnabled)
+        // While an action suppresses fire (e.g. boarding), the turret is disabled.
+        if (ActiveAction != null && ActiveAction.SuppressesFire)
         {
-            Debug.Log("Fire blocked - Boarding mode is active");
+            Debug.Log("Fire blocked - active button action suppresses fire");
             return;
         }
 
@@ -228,84 +238,20 @@ public class InputManager : MonoBehaviour
 
     private void OnInteractCanceled(InputAction.CallbackContext context)
     {
-        // Handle fire release if boarding is not enabled
-        if (wasFirePressed && !isBoardingEnabled && turretControls != null)
+        // When the active action suppresses fire, let it handle the release instead.
+        if (ActiveAction != null && ActiveAction.SuppressesFire)
+        {
+            ActiveAction.OnFireReleased();
+            return;
+        }
+
+        if (wasFirePressed && turretControls != null)
         {
             float holdDuration = Time.time - fireHoldStartTime;
             turretControls.OnFireReleased(holdDuration);
             Debug.Log($"Fire button released after {holdDuration:F2} seconds");
             wasFirePressed = false;
         }
-        // Handle boarding target detection if boarding is enabled
-        else if (isBoardingEnabled)
-        {
-            Transform boardableTarget = DetectBoardableTarget();
-            if (boardableTarget != null)
-            {
-                HandleBoardingCommand(boardableTarget);
-            }
-        }
-    }
-
-    private Transform DetectBoardableTarget()
-    {
-        // Get the mouse position
-        Vector3 mousePos = Mouse.current.position.ReadValue();
-
-        // Create a ray from the camera to the mouse position
-        Ray ray = Camera.main.ScreenPointToRay(mousePos);
-        Vector2 rayOrigin = new Vector2(ray.origin.x, ray.origin.y);
-        Vector2 rayDirection = new Vector2(ray.direction.x, ray.direction.y).normalized;
-
-        // Perform 2D raycast for 2D colliders
-        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, rayDirection);
-
-        if (hit.collider != null)
-        {
-            // Check if the hit object has the "Boardable" tag
-            if (hit.collider.CompareTag("Boardable"))
-            {
-                Debug.Log($"Boardable target detected: {hit.collider.gameObject.name}");
-                return hit.collider.transform;
-            }
-            else
-            {
-                Debug.Log($"Clicked on {hit.collider.gameObject.name}, but it is not boardable.");
-            }
-        }
-        else
-        {
-            Debug.Log("No object hit by raycast.");
-        }
-
-        return null;
-    }
-
-    private void HandleBoardingCommand(Transform boardableTarget = null)
-    {
-        // Ensure prefab and player ship are assigned
-        if (breacherSoldierPrefab == null || playerShip == null)
-        {
-            Debug.LogWarning("BreacherSoldier Prefab or Player Ship not assigned to InputManager");
-            return;
-        }
-
-        // Use the detected boardable target, or fall back to the default target ship
-        Transform targetForSoldier = boardableTarget ?? targetShip;
-
-        if (targetForSoldier == null)
-        {
-            Debug.LogWarning("No target ship assigned or detected");
-            return;
-        }
-
-        // Spawn the BreacherSoldier at the player ship position
-        spawnedSoldier = Instantiate(breacherSoldierPrefab, playerShip.position, Quaternion.identity);
-        BreacherSoldier breacherSoldier = spawnedSoldier.GetComponentInChildren<BreacherSoldier>();
-
-        // Set the target ship destination
-        breacherSoldier.SetTargetShip(targetForSoldier);
-        breacherSoldier.SetPlayerShip(playerShip);
     }
 
     private void OnPausePerformed(InputAction.CallbackContext context)
