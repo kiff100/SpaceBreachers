@@ -3,12 +3,36 @@ using UnityEngine;
 // Each HUD button gets its own action class so behavior can grow independently.
 // These currently signal selection; add gameplay logic in the overrides below.
 
-/// <summary>Tool selection button (label "1").</summary>
-public class ToolSelectButtonAction : ButtonActionBase
+/// <summary>Magnet weapon button (label "1").</summary>
+public class MagnetButtonAction : ButtonActionBase
 {
+    private readonly TurretControls turretControls;
+    private float fireHoldStartTime;
+
+    public MagnetButtonAction(TurretControls turretControls)
+    {
+        this.turretControls = turretControls;
+    }
+
+    public override bool SuppressesFire => true;
+
     public override void OnActivated()
     {
-        Debug.Log("Tool select activated");
+        Debug.Log("Magnet tool selected");
+    }
+
+    public override void OnFirePressed()
+    {
+        fireHoldStartTime = Time.time;
+    }
+
+    public override void OnFireReleased()
+    {
+        if (turretControls != null)
+        {
+            float holdDuration = Time.time - fireHoldStartTime;
+            turretControls.OnFireReleased(holdDuration);
+        }
     }
 }
 

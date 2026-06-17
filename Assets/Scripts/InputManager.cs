@@ -17,8 +17,6 @@ public class InputManager : MonoBehaviour
     [SerializeField] private Transform targetShip;
 
     private TurretControls turretControls;
-    private float fireHoldStartTime;
-    private bool wasFirePressed;
     // True while Fire is held and routed to a fire-suppressing action (e.g. the laser).
     private bool isSuppressedFireHeld;
 
@@ -137,7 +135,7 @@ public class InputManager : MonoBehaviour
                 _buttonActions[digit] = CreateAction(digit);
 
                 // Route mouse clicks through the unified selection handler.
-                int captured = digit;
+int captured = digit;
                 UnityAction clickHandler = () => OnSlotSelected(captured);
                 _slotClickHandlers[digit] = clickHandler;
                 button.onClick.AddListener(clickHandler);
@@ -164,9 +162,9 @@ public class InputManager : MonoBehaviour
     {
         switch (digit)
         {
-            case 1: return new ToolSelectButtonAction();
+            case 1: return new MagnetButtonAction(turretControls);
             case BoardSlot: return new BoardingButtonAction(breacherSoldierPrefab, playerShip, targetShip);
-            case 3: return new LaserButtonAction(targetShip);
+case 3: return new LaserButtonAction(targetShip);
             case 4: return new DroneButtonAction();
             case 5: return new SpearButtonAction();
             case 6: return new WarpButtonAction();
@@ -250,13 +248,6 @@ public class InputManager : MonoBehaviour
             ActiveAction.OnFirePressed();
             return;
         }
-
-        if (turretControls != null)
-        {
-            fireHoldStartTime = Time.time;
-            wasFirePressed = true;
-            Debug.Log("Fire button pressed");
-        }
     }
 
     private void OnInteractCanceled(InputAction.CallbackContext context)
@@ -267,14 +258,6 @@ public class InputManager : MonoBehaviour
             isSuppressedFireHeld = false;
             ActiveAction.OnFireReleased();
             return;
-        }
-
-        if (wasFirePressed && turretControls != null)
-        {
-            float holdDuration = Time.time - fireHoldStartTime;
-            turretControls.OnFireReleased(holdDuration);
-            Debug.Log($"Fire button released after {holdDuration:F2} seconds");
-            wasFirePressed = false;
         }
     }
 

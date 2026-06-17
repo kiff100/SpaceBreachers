@@ -423,7 +423,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1836,7 +1836,7 @@ GameObject:
   - component: {fileID: 1491942132}
   - component: {fileID: 1491942131}
   m_Layer: 5
-  m_Name: ToolSelectButton
+  m_Name: MagnetButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

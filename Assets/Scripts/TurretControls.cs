@@ -58,13 +58,17 @@ public class TurretControls : MonoBehaviour
             }
 
             Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
-            mouseScreenPos.z = -Camera.main.transform.position.z;
+            
+            // Use the fire point's screen depth to get an accurate world position on the same plane
+            float depth = Camera.main.WorldToScreenPoint(firePoint.position).z;
+            mouseScreenPos.z = depth;
+            
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(mouseScreenPos);
             Vector2 direction = GetProjectileDirection(mouseWorldPos, this.firePoint.position);
             FireProjectile(holdDuration, direction);
             lastFired = Time.time;
-            Debug.Log($"Fire! Hold duration: {holdDuration:F2} seconds, Direction: {direction}");
-        }
+            Debug.Log($"Fire! MouseWorld: {mouseWorldPos}, FirePoint: {firePoint.position}, Direction: {direction}");
+}
         else if (projectiles.Count >= maxProjectiles)
         {
             foreach (MagnetProjectile projectile in projectiles)
