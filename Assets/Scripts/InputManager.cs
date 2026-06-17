@@ -19,6 +19,8 @@ public class InputManager : MonoBehaviour
     private TurretControls turretControls;
     private float fireHoldStartTime;
     private bool wasFirePressed;
+    // True while Fire is held and routed to a fire-suppressing action (e.g. the laser).
+    private bool isSuppressedFireHeld;
 
     private InputAction interactAction;
     private InputAction pauseAction;
@@ -67,6 +69,25 @@ public class InputManager : MonoBehaviour
         }
 
         SetupSlots();
+    }
+
+    void Update()
+    {
+        if (!isSuppressedFireHeld)
+        {
+            return;
+        }
+
+        // Forward the per-frame held event to the active continuous action (e.g. the laser).
+        // If the active action stopped suppressing fire (e.g. was deselected), end the hold.
+        if (ActiveAction != null && ActiveAction.SuppressesFire)
+        {
+            ActiveAction.OnFireHeld();
+        }
+        else
+        {
+            isSuppressedFireHeld = false;
+        }
     }
 
     void OnDestroy()
@@ -145,7 +166,7 @@ public class InputManager : MonoBehaviour
         {
             case 1: return new ToolSelectButtonAction();
             case BoardSlot: return new BoardingButtonAction(breacherSoldierPrefab, playerShip, targetShip);
-            case 3: return new LaserButtonAction();
+            case 3: return new LaserButtonAction(targetShip);
             case 4: return new DroneButtonAction();
             case 5: return new SpearButtonAction();
             case 6: return new WarpButtonAction();
@@ -221,10 +242,12 @@ public class InputManager : MonoBehaviour
 
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
-        // While an action suppresses fire (e.g. boarding), the turret is disabled.
+        // While an action suppresses fire (e.g. boarding, laser), the turret is disabled and
+        // the action handles the press/hold/release itself.
         if (ActiveAction != null && ActiveAction.SuppressesFire)
         {
-            Debug.Log("Fire blocked - active button action suppresses fire");
+            isSuppressedFireHeld = true;
+            ActiveAction.OnFirePressed();
             return;
         }
 
@@ -241,6 +264,7 @@ public class InputManager : MonoBehaviour
         // When the active action suppresses fire, let it handle the release instead.
         if (ActiveAction != null && ActiveAction.SuppressesFire)
         {
+            isSuppressedFireHeld = false;
             ActiveAction.OnFireReleased();
             return;
         }

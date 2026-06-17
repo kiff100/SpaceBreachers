@@ -15,9 +15,18 @@ public interface IButtonAction
 
     /// <summary>
     /// When true, the default Fire/turret behavior is suppressed while this action is active,
-    /// and <see cref="OnFireReleased"/> is invoked on the Fire release instead.
+    /// and the fire-input hooks below are invoked instead.
     /// </summary>
     bool SuppressesFire { get; }
+
+    /// <summary>Invoked when the Fire input is first pressed while this action is active.</summary>
+    void OnFirePressed();
+
+    /// <summary>
+    /// Invoked every frame while the Fire input is held down and this action is active.
+    /// Used by continuous tools such as the laser to sustain their effect.
+    /// </summary>
+    void OnFireHeld();
 
     /// <summary>Invoked when the Fire input is released while this action is active.</summary>
     void OnFireReleased();

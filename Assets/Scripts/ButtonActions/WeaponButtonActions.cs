@@ -12,12 +12,53 @@ public class ToolSelectButtonAction : ButtonActionBase
     }
 }
 
-/// <summary>Laser weapon button (label "3").</summary>
+/// <summary>
+/// Laser weapon button (label "3"). While active it suppresses the default turret fire and
+/// instead drives the cargo ship's <see cref="LaserWeapon"/>: holding Fire sustains the beam,
+/// releasing Fire (or deselecting the tool) stops it.
+/// </summary>
 public class LaserButtonAction : ButtonActionBase
 {
+    private readonly LaserWeapon laserWeapon;
+
+    public LaserButtonAction(Transform targetShip)
+    {
+        if (targetShip != null)
+        {
+            laserWeapon = targetShip.GetComponentInChildren<LaserWeapon>();
+            if (laserWeapon == null)
+            {
+                Debug.LogWarning("LaserButtonAction: no LaserWeapon found on the target ship.");
+            }
+        }
+    }
+
+    public override bool SuppressesFire => true;
+
     public override void OnActivated()
     {
         Debug.Log("Laser selected");
+    }
+
+    public override void OnDeactivated()
+    {
+        // Stop the beam if the tool is switched away while firing.
+        laserWeapon?.StopFiring();
+    }
+
+    public override void OnFirePressed()
+    {
+        laserWeapon?.TryBeginFire();
+    }
+
+    public override void OnFireHeld()
+    {
+        laserWeapon?.TickFire();
+    }
+
+    public override void OnFireReleased()
+    {
+        laserWeapon?.StopFiring();
     }
 }
 

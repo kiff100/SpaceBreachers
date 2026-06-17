@@ -12,5 +12,9 @@ public abstract class ButtonActionBase : IButtonAction
 
     public virtual bool SuppressesFire => false;
 
+    public virtual void OnFirePressed() { }
+
+    public virtual void OnFireHeld() { }
+
     public virtual void OnFireReleased() { }
 }
